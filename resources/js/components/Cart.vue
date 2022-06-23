@@ -387,8 +387,24 @@ export default {
         },
 
         async processOrder() {
-            this.error.message = "App Under Development";
-            this.snackbar = true;
+            this.isLoading = true
+            try {
+                const response = await axios.post(`/api/orders`, {
+                    driver_id : this.selectedDriver.id,
+                    restaurant_id : this.restaurantId,
+                    lat : this.user.lat,
+                    lng : this.user.lng,
+                    delivery_address : this.user.address,
+                    delivery_fee : this.summary.delivery_fee,
+                    service_fee : this.summary.service_fee,
+                });
+                this.isLoading = false
+                this.$router.push({ name: 'Order' })
+            } catch (error) {
+                this.isLoading = false
+                this.error = error.response.data
+                this.snackbar = true
+            }
         },
     }
 };

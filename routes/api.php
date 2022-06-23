@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\UpdateLocation;
 use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -39,4 +40,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('/restaurants', RestaurantController::class)->only('index', 'show', 'store', 'update');
     Route::resource('/carts', CartController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('/drivers', DriverController::class)->only('index');
+    Route::resource('/orders', OrderController::class)->only('index', 'store', 'update', 'destroy');
 });

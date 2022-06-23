@@ -12,7 +12,9 @@ class RestaurantController extends Controller
 {
     public function index(Request $request)
     {
-        $restaurants = Restaurant::query()
+        $restaurants = Restaurant::when($request->get('q'), function ($query) use ($request) {
+                $query->orWhere('name', 'like', '%'.$request->get('q').'%');
+            })
             ->when($request->get('limit'), function ($query) use ($request) {
                 $query->limit($request->get('limit'));
             })

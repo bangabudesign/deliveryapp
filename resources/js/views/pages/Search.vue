@@ -85,9 +85,9 @@ export default {
 
     created() {
         this.getUser()
+        this.category = this.$route.query.category || ''
+        this.searchTerm = this.$route.query.q || ''
         this.initialize()
-        this.category = this.$route.query.category
-        this.searchTerm = this.$route.query.q
     },
 
     methods: {
@@ -107,36 +107,20 @@ export default {
                 this.error = error.response.data
             });
         },
-        initialize() {
-            this.restaurants = [
-                {
-                    id: 1,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Hayo Kebab And Burger - Cempaka Raya',
-                    menu: 'Ayam, Bebek, Nasi',
-                },
-                {
-                    id: 2,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Rocket Chicken - Teluk Dalam',
-                    menu: 'Ayam, Nasi',
-                },
-                {
-                    id: 3,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Dapur 3 Badingsanak - Kertak Ilir',
-                    menu: 'Ayam, Nasi',
-                },
-                {
-                    id: 4,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Warung Ayuja - Pasar Lama',
-                    menu: 'Ayam, Nasi',
-                }
-            ]
+        async initialize() {
+            this.isLoading = true
+            try {
+                const response = await axios.get(`/api/restaurants?category=${this.category}&q=${this.searchTerm}`);
+                this.restaurants = response.data.data
+                this.isLoading = false
+            } catch (error) {
+                this.isLoading = false
+                this.error = error.response.data
+            }
         },
         inputSearch() {
             this.$router.replace({ query: { category: this.category, q: this.searchTerm } })
+            this.initialize()
         },
         getLocation() {
             navigator.geolocation.getCurrentPosition(

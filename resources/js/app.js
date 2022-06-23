@@ -15,9 +15,9 @@ const opts = {
                 tertiary: '#09bbbd',
                 error: '#FF5252',
                 info: '#2196F3',
+                warning: '#FFC107',
                 success: '#4CAF50',
                 danger: '#F44336',
-                warning: '#FFC107',
                 dark: '#1f1d31',
                 muted: '#f4f5fa'
             },
