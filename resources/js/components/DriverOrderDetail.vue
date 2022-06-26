@@ -8,8 +8,8 @@
                     </v-btn>
                     <v-app-bar-title class="pl-0" v-text="'Order Detail'"></v-app-bar-title>
                 </v-app-bar>
-                <v-container class="px-0 pt-15 pb-16" v-if="order && order.id">
-                    <div id="map" v-if="order.status != 'PAID'"></div>
+                <v-container class="px-0 pt-15" :class="{'pb-16': order.status != 'PAID'}" v-if="order && order.id">
+                    <div id="map" :class="{'d-none': order.status == 'PAID'}"></div>
                     <v-stepper alt-labels flat value="step(order.status)">
                         <v-stepper-header>
                             <v-stepper-step :complete="step(order.status) > 1" step="1">
@@ -42,18 +42,20 @@
                                     <v-list-item-subtitle v-text="order.restaurant.address"></v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
-                            <v-subheader class="px-3">Driver</v-subheader>
+                            <v-subheader class="px-3">Pemesan</v-subheader>
                             <v-list-item color="primary" class="px-3" dense>
                                 <v-list-item-avatar>
-                                    <img v-if="order.driver.avatar" :src="order.driver.avatar_url" :alt="order.driver.name">
-                                    <v-icon v-else color="white" class="tertiary lighten-1" dark>mdi-motorbike</v-icon>
+                                    <img v-if="order.user.avatar" :src="order.user.avatar_url" :alt="order.user.name">
+                                    <v-icon v-else color="white" class="tertiary lighten-1" dark>mdi-account</v-icon>
                                 </v-list-item-avatar>
                                 <v-list-item-content>
-                                    <v-list-item-title>{{ order.driver.name }}</v-list-item-title>
-                                    <v-list-item-subtitle v-text="order.driver.motor_type+(order.driver.vehicle_number ? ' • ' : '')+order.driver.vehicle_number"></v-list-item-subtitle>
+                                    <v-list-item-title>{{ order.user.name }}</v-list-item-title>
+                                    <v-list-item-subtitle v-text="'0'+order.user.phone"></v-list-item-subtitle>
                                 </v-list-item-content>
-                                <v-list-item-icon class="my-auto">
-                                    <v-icon>mdi-message-text</v-icon>
+                                <v-list-item-icon>
+                                    <v-btn icon color="success" :href="'https://wa.me/62'+order.user.phone" target="_blank">
+                                        <v-icon>mdi-message-text</v-icon>
+                                    </v-btn>
                                 </v-list-item-icon>
                             </v-list-item>
                             <v-subheader class="px-3">Ringkasan Pesanan</v-subheader>
@@ -86,14 +88,14 @@
                         <div class="subtitle-2 grey--text text--darken-1 font-weight-light">Biaya Layanan</div>
                         <div class="subtitle-2">Rp{{ numberFormat(order.service_fee) }}</div>
                     </div>
-                    <div class="d-flex justify-space-between px-4 mt-4">
+                    <div class="d-flex justify-space-between px-4 mt-4 pb-4">
                         <div class="subtitle-2 font-weight-bold">Total</div>
                         <div class="subtitle-2 font-weight-bold">Rp{{ numberFormat(order.total) }}</div>
                     </div>
                     
-                    <v-bottom-navigation fixed dark horizontal>
-                        <v-btn color="primary" v-if="order.status == 'RECEIVED'" large block>Tandakan Sudah Diambil</v-btn>
-                        <v-btn color="primary" v-if="order.status == 'TAKEN'" large block>Tandakan Selesai</v-btn>
+                    <v-bottom-navigation fixed dark horizontal v-if="order.status != 'PAID'">
+                        <v-btn color="primary" v-if="order.status == 'RECEIVED'" large block @click="updateStatus('TAKEN')">Tandakan Sudah Diambil</v-btn>
+                        <v-btn color="primary" v-if="order.status == 'TAKEN'" large block @click="updateStatus('PAID')">Tandakan Selesai</v-btn>
                     </v-bottom-navigation>
                     
                     <!-- snack bar -->
@@ -190,6 +192,23 @@ export default {
                     break;
                 default:
                     return 0
+            }
+        },
+        
+        async updateStatus(val) {
+            this.isLoading = true
+            try {
+                const response = await axios.put(`/api/orders/${this.order.id}`, { status: val});
+                this.isLoading = false
+                this.error = {
+                    message: response.data.message
+                }
+                this.order.status = val
+                this.snackbar = true
+            } catch (error) {
+                this.isLoading = false
+                this.error = error.response.data
+                this.snackbar = true
             }
         },
 

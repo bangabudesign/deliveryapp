@@ -4,29 +4,26 @@
             <v-toolbar-title>Profile</v-toolbar-title>
         </v-app-bar>
         <v-container class="bg-white px-0" style="padding-bottom: 64px;">
-            <!-- content -->
-            <v-list>
-                <v-list-item-group>
-                    <template v-for="(item, index) in orders">
-                        <v-list-item :key="item.id" dense>
-                            <v-list-item-content>
-                                <v-list-item-title v-text="item.resto"></v-list-item-title>
-                                <v-list-item-subtitle v-text="item.date"></v-list-item-subtitle>
-                            </v-list-item-content>
-                            <v-list-item-action>
-                                <v-list-item-action-text class="subtitle-1 font-weight-regular" v-text="item.price"></v-list-item-action-text>
-                            </v-list-item-action>
-                        </v-list-item>
-                    </template>
-                </v-list-item-group>
-            </v-list>            
-            <!-- content -->
+            <v-card flat>
+                <v-card-text class="text-center">
+                    <v-avatar size="60">
+                        <img v-if="user.avatar" :src="user.avatar_url" :alt="user.name">
+                        <v-icon v-else color="white" class="tertiary lighten-1" dark>mdi-account</v-icon>
+                    </v-avatar>
+                    <div class="my-4">
+                        <h2 v-text="user.name"></h2>
+                        <div class="subtitle-2 mt-2" v-text="'0'+user.phone"></div>
+                        <div class="subtitle-2 mt-2" v-text="user.role"></div>
+                    </div>
+                    <v-btn color="danger" class="rounded-pill" text block @click="logOut">Log Out</v-btn>
+                </v-card-text>
+            </v-card>
         </v-container>
         <DriverBottomNav/>
     </section>
 </template>
 <script>
-
+import Cookies from 'js-cookie';
 import DriverBottomNav from '../../components/DriverBottomNav.vue';
 export default {
     components: {
@@ -35,7 +32,7 @@ export default {
     data() {
         return {
             isLoading: false,
-            orders: [],
+            user: {},
         }
     },
 
@@ -45,33 +42,30 @@ export default {
 
     methods: {
         async initialize() {
-            this.orders = [
-                {
-                    id: 1,
-                    resto: 'Hayo Kebab And Burger - Cempaka Raya',
-                    price: 'Rp45,000',
-                    date: '30 Mei 2022'
-                },
-                {
-                    id: 2,
-                    resto: 'Rocket Chicken - Teluk Dalam',
-                    price: 'Rp30,000',
-                    date: '30 Mei 2022'
-                },
-                {
-                    id: 3,
-                    resto: 'Dapur 3 Badingsanak - Kertak Ilir',
-                    price: 'Rp25,000',
-                    date: '30 Mei 2022'
-                },
-                {
-                    id: 4,
-                    resto: 'Warung Ayuja - Pasar Lama',
-                    price: 'Rp40,000',
-                    date: '30 Mei 2022'
-                }
-            ]
-        }
+            this.isLoading = true
+            try {
+                const response = await axios.get(`/api/user`);
+                this.user = response.data.data
+                this.isLoading = false
+            } catch (error) {
+                this.isLoading = false
+                this.error = error.response.data
+            }
+        },
+        
+        async logOut() {
+            this.isLoading = true
+            try {
+                const response = await axios.get(`/api/logout`);
+                this.isLoading = false
+                Cookies.remove('token')
+                Cookies.remove('role')
+                this.$router.push({ name: 'Splash' })
+            } catch (error) {
+                this.isLoading = false
+                this.error = error.response.data
+            }
+        },
     }
 };
 </script>

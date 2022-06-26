@@ -39,6 +39,9 @@ function loggedIn(){
 
 router.beforeEach((to, from, next) => {
 
+    let role = Cookies.get('role')
+    let path = to.path.split("/")[1]
+
     if (to.matched.some(record => record.meta.requiresAuth)) {
         if (!loggedIn()) {
             next({
@@ -46,13 +49,20 @@ router.beforeEach((to, from, next) => {
                 query: { redirect: to.fullPath }
             })
         } else {
-            next()
+            if (role == 'USER' && path == 'app') {
+                next()
+            } else if (role == 'DRIVER' && path == 'driver') {
+                next()
+            }  else if (role == 'PARTNER' && path == 'partner') {
+                next()
+            } else {
+                router.push({ name: 'Splash' })
+            }
         }
-    } else if (to.matched.some(record => record.meta.requiresRegister)) {
-        if (!loggedIn()) {
+    } else if (to.matched.some(record => record.meta.requiresGuest)) {
+        if (loggedIn()) {
             next({
-                path: '/register',
-                query: { redirect: to.fullPath }
+                path: '/app/home',
             })
         } else {
             next()

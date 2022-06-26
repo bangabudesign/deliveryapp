@@ -19,7 +19,7 @@ class Order extends Model
         'delivery_address',
         'delivery_fee',
         'service_fee',
-        'status',
+        'status', //RECEIVED, TAKEN, PAID
     ];
 
     protected $appends = ['latlng', 'sub_total', 'total'];

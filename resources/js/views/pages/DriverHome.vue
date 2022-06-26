@@ -16,20 +16,20 @@
             <v-card class="mx-auto mb-4 rounded-lg" style="margin-top: -32px;">
                 <v-card-title class="pb-0">
                     <v-avatar>
-                        <img src="https://cdn.vuetifyjs.com/images/lists/1.jpg" alt="Abdul Kadir">
+                        <img :src="user.avatar_url" :alt="user.name">
                     </v-avatar>
                     <v-spacer></v-spacer>
                     <div class="mr-4 font-weight-normal grey--text text--darken-2">{{ status ? 'Aktif' : 'Istirahat' }}</div>
                     <v-switch v-model="status" inset></v-switch>
                 </v-card-title>
-                <v-card-title class="pt-0">Abdul Kadir</v-card-title>
-                <v-card-subtitle>DA 1234 XY</v-card-subtitle>
+                <v-card-title class="pt-0" v-text="user.name"></v-card-title>
+                <v-card-subtitle v-text="user.motor_type+(user.vehicle_number ? ' • ' : '')+user.vehicle_number"></v-card-subtitle>
             </v-card>
             <!-- status -->
             <v-card class="mb-4 tertiary rounded-lg">
                 <v-card-title>
                     <div>
-                        <small class="white--text font-weight-normal">Radjapay</small>
+                        <small class="white--text font-weight-normal">Saldo</small>
                         <div class="white--text" style="margin-top: -8px;">Rp 200,000</div>
                     </div>
                     <v-spacer></v-spacer>
@@ -87,56 +87,25 @@ export default {
     },
 
     created () {
-        this.getUser()
         this.initialize()
-        this.loadMap()
+        this.getLocation()
         setInterval(() => {
             this.getLocation()
             console.log("location tracking")
-        }, 40000)
+        }, 10000)
     },
 
     methods: {
-        getUser() {
+        async initialize() {
             this.isLoading = true
-            axios.get('/api/user')
-            .then((response) => {
-                this.isLoading = false
+            try {
+                const response = await axios.get(`/api/user`);
                 this.user = response.data.data
-                this.defaultUser = Object.assign({}, response.data.data)
-            })
-            .catch((error) => {
+                this.isLoading = false
+            } catch (error) {
                 this.isLoading = false
                 this.error = error.response.data
-            });
-        },
-        async initialize() {
-            this.restaurants = [
-                {
-                    id: 1,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Hayo Kebab And Burger - Cempaka Raya',
-                    menu: 'Ayam, Bebek, Nasi',
-                },
-                {
-                    id: 2,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Rocket Chicken - Teluk Dalam',
-                    menu: 'Ayam, Nasi',
-                },
-                {
-                    id: 3,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Dapur 3 Badingsanak - Kertak Ilir',
-                    menu: 'Ayam, Nasi',
-                },
-                {
-                    id: 4,
-                    image_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    name: 'Warung Ayuja - Pasar Lama',
-                    menu: 'Ayam, Nasi',
-                }
-            ]
+            }
         },
         getLocation() {
             navigator.geolocation.getCurrentPosition(
@@ -177,40 +146,9 @@ export default {
                 };
                 // variabel
                 var map             = L.map('map', {center: this.user.latlng, zoom: 20}),
-                    marker          = L.marker(this.user.latlng, {icon: driverIcon, draggable: true}).addTo(map),
+                    marker          = L.marker(this.user.latlng, {icon: driverIcon}).addTo(map),
                     geocodeService  = L.esri.Geocoding.geocodeService();
-                // cari lokasi
-                var searchControl = L.esri.Geocoding.geosearch({
-                    position: 'topright',
-                    placeholder: 'Ketik Alamat Sekarang',
-                    useMapBounds: false,
-                    providers: [L.esri.Geocoding.arcgisOnlineProvider()]
-                }).addTo(map);
-
-                var results = L.layerGroup().addTo(map);
-    
-                searchControl.on('results', (data) => {
-                    results.clearLayers();
-                    for (var i = data.results.length - 1; i >= 0; i--) {
-                        marker.setLatLng(data.results[i].latlng).bindPopup(data.results[i].text).openPopup();
-                        const { lat, lng } = data.results[i].latlng;
-                        this.user.lat = lat
-                        this.user.lng = lng
-                        this.user.latlng = [lat, lng]
-                    }
-                });
-
-                // marker
-                marker.on('dragend', (e) => {
-                    const { lat, lng } = e.target.getLatLng()
-                    this.user.lat = lat
-                    this.user.lng = lng
-                    this.user.latlng = [lat, lng]
-                    geocodeService.reverse().latlng(this.user.latlng).run( (error, result) => {
-                        marker.setLatLng(this.user.latlng).bindPopup(result.address.Match_addr).openPopup();
-                    });
-                });
-                
+                                
                 // add title layer
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

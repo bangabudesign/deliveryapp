@@ -9,7 +9,7 @@
                     <v-app-bar-title class="pl-0" v-text="'Order Detail'"></v-app-bar-title>
                 </v-app-bar>
                 <v-container class="px-0 pt-15" v-if="order && order.id">
-                    <div id="map" v-if="order.status != 'PAID'"></div>
+                    <div id="map" :class="{'d-none': order.status == 'PAID'}"></div>
                     <v-stepper alt-labels flat value="step(order.status)">
                         <v-stepper-header>
                             <v-stepper-step :complete="step(order.status) > 1" step="1">
@@ -52,8 +52,10 @@
                                     <v-list-item-title>{{ order.driver.name }}</v-list-item-title>
                                     <v-list-item-subtitle v-text="order.driver.motor_type+(order.driver.vehicle_number ? ' • ' : '')+order.driver.vehicle_number"></v-list-item-subtitle>
                                 </v-list-item-content>
-                                <v-list-item-icon class="my-auto">
-                                    <v-icon>mdi-message-text</v-icon>
+                                <v-list-item-icon>
+                                    <v-btn icon color="success" :href="'https://wa.me/62'+order.driver.phone" target="_blank">
+                                        <v-icon>mdi-message-text</v-icon>
+                                    </v-btn>
                                 </v-list-item-icon>
                             </v-list-item>
                             <v-subheader class="px-3">Ringkasan Pesanan</v-subheader>
@@ -86,7 +88,7 @@
                         <div class="subtitle-2 grey--text text--darken-1 font-weight-light">Biaya Layanan</div>
                         <div class="subtitle-2">Rp{{ numberFormat(order.service_fee) }}</div>
                     </div>
-                    <div class="d-flex justify-space-between px-4 mt-4">
+                    <div class="d-flex justify-space-between px-4 mt-4 pb-4">
                         <div class="subtitle-2 font-weight-bold">Total</div>
                         <div class="subtitle-2 font-weight-bold">Rp{{ numberFormat(order.total) }}</div>
                     </div>

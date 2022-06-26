@@ -49,6 +49,7 @@ export default {
             .then((response) => {
                 this.isLoading = false
                 Cookies.set('token', response.data.token, { expires: 30 })
+                Cookies.set('role', response.data.role, { expires: 30 })
                 if(response.data.role == 'USER') {
                     this.$router.push({ name: 'Home' })
                 }else if(response.data.role == 'DRIVER') {

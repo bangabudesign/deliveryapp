@@ -25,7 +25,7 @@ class OrderController extends Controller
 
         $response = [
             'status' => Response::HTTP_OK,
-            'message' => 'Menampilkan Data Pesanan',
+            'message' => 'Menampilkan data pesanan',
             'data' => $orders,
         ];
 
@@ -104,8 +104,39 @@ class OrderController extends Controller
 
         $response = [
             'status' => Response::HTTP_OK,
-            'message' => 'Order Berhasil Dibuat',
+            'message' => 'Pesanan berhasil dibuat',
             'data' => $order
+        ];
+
+        return response()->json($response, Response::HTTP_OK);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required',
+        ], [
+            'required' => ':attribute tidak boleh kosong.'
+        ], [
+            'status' => 'Status Pesanan',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'status' => Response::HTTP_BAD_REQUEST,
+                'message' => 'Gagal memperbarui status',
+                'errors' => $validator->messages()
+            ];
+            return response()->json($response, Response::HTTP_BAD_REQUEST);
+        }
+
+        $order = Order::findOrFail($id);
+
+        $order->update(['status' => $request->status]);
+
+        $response = [
+            'status' => Response::HTTP_OK,
+            'message' => 'Status pesanan berhasil diperbarui',
         ];
 
         return response()->json($response, Response::HTTP_OK);

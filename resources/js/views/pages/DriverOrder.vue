@@ -5,7 +5,7 @@
         </v-app-bar>
         <v-container class="bg-white px-0" style="padding-bottom: 64px;">
             <!-- content -->
-            <v-list>
+            <v-list v-if="orders.length">
                 <v-list-item-group>
                     <template v-for="(item, index) in orders">
                         <v-list-item :key="item.id" dense @click="detail(item)">
@@ -20,7 +20,14 @@
                         </v-list-item>
                     </template>
                 </v-list-item-group>
-            </v-list>            
+            </v-list>
+            <v-card v-else flat class="text-center pt-16">
+                <v-card-text>
+                    <v-icon x-large>mdi-food-fork-drink</v-icon>
+                    <div class="subtitle-1 dark--text">Wah, Pesananmu Masih Kosong</div>
+                    <div class="caption">Yuk siap siaga, bentar lagi ada yg mau minta kamu anterin makanan atau minuman.</div>
+                </v-card-text>
+            </v-card>
             <!-- content -->
         </v-container>
         <DriverOrderDetail :order="orderDetail" :showDialog="showDialog" @closeDialog="close"/>
@@ -91,8 +98,11 @@ export default {
 
         statusColor(val) {
             switch(val) {
-                case 'UNPAID':
+                case 'RECEIVED':
                     return 'warning--text'
+                    break;
+                case 'TAKEN':
+                    return 'primary--text'
                     break;
                 case 'PAID':
                     return 'success--text'
