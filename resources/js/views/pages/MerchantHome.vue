@@ -1,51 +1,36 @@
 <template>
     <section>
-        <v-app-bar app color="primary" dark inverted-scroll elevation-1>
+        <v-app-bar app color="success" dark inverted-scroll elevation-1>
             <v-app-bar-title>
                 <v-img src="/images/logo-white.svg" alt="Logo Radjago" max-height="40" contain position="left center"></v-img>
             </v-app-bar-title>
             <v-spacer></v-spacer>
-            <v-btn icon>
-                <v-icon>mdi-bell</v-icon>
-            </v-btn>
         </v-app-bar>
-        <v-toolbar color="primary" dark extended flat dense class="mx-auto pt-3">
+        <v-toolbar color="success" dark extended flat dense class="mx-auto pt-3">
             <v-toolbar-title>
                 <v-img src="/images/logo-white.svg" alt="Logo Radjago" max-height="40" contain position="left center"></v-img>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon>
-                <v-icon>mdi-bell</v-icon>
-            </v-btn>
         </v-toolbar>
         <v-container class="bg-white" style="padding-bottom: 64px;">
-            <v-card class="mx-auto rounded-pill" flat style="margin-top: -32px;">
-                <v-text-field class="rounded-pill" v-model="searchTerm" placeholder="mau makan apa?" solo prepend-inner-icon="mdi-magnify" @input="inputSearch"></v-text-field>
+            <v-card class="mx-auto mb-3 rounded-lg" style="margin-top: -32px;">
+                <v-card-title>
+                    <div>
+                        <small class="dark--text font-weight-normal">Saldo</small>
+                        <div class="dark--text" style="margin-top: -8px;">Rp 200,000</div>
+                    </div>
+                </v-card-title>
+                <v-divider></v-divider>
+                <v-card-title>
+                    <v-row style="margin-left:-4px; margin-right:-4px;">
+                        <v-col cols="4" class="px-1" v-for="menu in menus" :key="menu.id">
+                            <v-btn :color="menu.color" dark elevation="0" class="rounded-pill py-4" x-small block route :to="{ name: 'Search', query: {category: menu.label.toLowerCase()} }">
+                                <v-icon color="white" left>{{menu.icon}}</v-icon> {{menu.label}}</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-title>
             </v-card>
-            <!-- menu -->
-            <v-row class="mb-3">
-                <v-col cols="3" v-for="menu in menus" :key="menu.id">
-                    <v-card class="d-flex flex-column align-center justify-center" flat route :to="{ name: 'Search', query: {category: menu.label.toLowerCase()} }">
-                        <v-avatar>
-                            <v-icon :style="{backgroundColor: menu.color}" dark>{{menu.icon}}</v-icon>
-                            <!-- <img :src="menu.icon_url" :alt="menu.label"> -->
-                        </v-avatar>
-                        <span class="text-center mt-2 caption" v-text="menu.label"></span>
-                    </v-card>
-                </v-col>
-            </v-row>
-            <!-- end menu -->
-            <!-- slideshow -->
-            <v-card flat class="mb-6 rounded-lg">
-                <v-carousel cycle hide-delimiter-background :show-arrows="false" height="auto" light>
-                    <v-carousel-item v-for="slide in slides" :key="slide.id">
-                        <v-img :aspect-ratio="16/9" :src="slide.image" class="rounded-lg"></v-img>
-                    </v-carousel-item>
-                </v-carousel>
-            </v-card>
-            <!-- end slideshow -->
             <!-- content -->
-            <h2 class="text-h6 mb-4">Mau makan apa hari ini?</h2>
             <template v-if="isLoading || restaurants.length == 0">
                 <v-card class="d-flex flex-no-wrap mb-3 rounded-lg" outlined>
                     <v-skeleton-loader color="grey lighten-4" class="ma-3" height="100" width="100" type="image"></v-skeleton-loader>
@@ -76,76 +61,70 @@
                     </div>
                 </v-card>
             </template>
-            <CardResto v-else :items="restaurants"/>
+            <MerchantCardResto v-else :items="restaurants"/>
             <!-- content -->
+            <v-btn color="primary" dark fixed right bottom fab style="bottom: 80px;" route :to="{ name: 'MerchantRestoForm' }">
+                <v-icon>mdi-plus</v-icon>
+            </v-btn>
         </v-container>
-        <BottomNav/>
+        <MerchantBottomNav/>
     </section>
 </template>
 <style>
-    .v-carousel__controls .v-btn--icon.v-size--small {
-        height: 10px;
-        width: 10px;
-    }
+    #map { height: 300px; z-index: 1; }
 </style>
 <script>
-import CardResto from '../../components/CardResto.vue';
-import BottomNav from '../../components/BottomNav.vue';
+
+import MerchantCardResto from '../../components/MerchantCardResto.vue';
+import MerchantBottomNav from '../../components/MerchantBottomNav.vue';
 export default {
     components: {
-        CardResto,
-        BottomNav
+        MerchantCardResto,
+        MerchantBottomNav
     },
     data() {
         return {
             isLoading: false,
-            searchTerm: '',
+            user: {},
             menus: [
                 {
                     id: 1,
-                    icon: 'mdi-map-marker-radius',
-                    color: '#2b7bec',
+                    icon: 'mdi-plus-circle',
+                    color: '#4CAF50',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Disekitar'
+                    label: 'Top Up'
                 },
                 {
                     id: 2,
-                    icon: 'mdi-rice',
-                    color: '#ff6a30',
+                    icon: 'mdi-arrow-up-bold-circle',
+                    color: '#7309a9',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Makanan'
+                    label: 'Kirim'
                 },
                 {
                     id: 3,
-                    icon: 'mdi-glass-mug',
-                    color: '#a46dfe',
+                    icon: 'mdi-arrow-down-bold-circle',
+                    color: '#09bbbd',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Minuman'
+                    label: 'Tarik'
                 },
-                {
-                    id: 4,
-                    icon: 'mdi-food',
-                    color: '#93d31b',
-                    icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Snack'
-                }
             ],
-            slides: [],
             restaurants: [],
+            error: {}
         }
     },
 
     created () {
-        this.getSlides()
+        this.initialize()
         this.getRestaurants()
     },
 
     methods: {
-        async getSlides() {
+        async initialize() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/slides`);
-                this.slides = response.data.data
+                const response = await axios.get(`/api/user`);
+                this.user = response.data.data
                 this.isLoading = false
             } catch (error) {
                 this.isLoading = false
@@ -163,11 +142,6 @@ export default {
                 this.error = error.response.data
             }
         },
-        inputSearch() {
-            if(this.searchTerm.length > 2) {
-                this.$router.push({ name: 'Search', query: { q: this.searchTerm } })
-            }
-        }
     }
 };
 </script>

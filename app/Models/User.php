@@ -12,6 +12,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function routeNotificationForWhatsApp()
+    {
+        return $this->phone;
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +30,7 @@ class User extends Authenticatable
         'lat',
         'lng',
         'address',
-        'role',
+        'role', //USER, DRIVER, MERCHANT
         'avatar',
         'motor_type',
         'vehicle_number',

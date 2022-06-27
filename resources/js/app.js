@@ -53,9 +53,11 @@ router.beforeEach((to, from, next) => {
                 next()
             } else if (role == 'DRIVER' && path == 'driver') {
                 next()
-            }  else if (role == 'PARTNER' && path == 'partner') {
+            }  else if (role == 'MERCHANT' && path == 'merchant') {
                 next()
             } else {
+                Cookies.remove('token')
+                Cookies.remove('role')
                 router.push({ name: 'Splash' })
             }
         }

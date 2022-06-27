@@ -30,4 +30,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'messagebird' => [
+        'access_key' => env('MESSAGEBIRD_ACCESS_KEY'),
+        'channel_id' => env('MESSAGEBIRD_CHANNEL_ID'),
+        'namespace_id' => env('MESSAGEBIRD_NAMESPACE_ID'),
+    ]
+
 ];

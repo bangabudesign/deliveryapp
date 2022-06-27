@@ -1,12 +1,12 @@
 <template>
     <section>
-        <v-app-bar app color="primary" dark inverted-scroll elevation-1>
+        <v-app-bar app color="tertiary" dark inverted-scroll elevation-1>
             <v-app-bar-title>
                 <v-img src="/images/logo-white.svg" alt="Logo Radjago" max-height="40" contain position="left center"></v-img>
             </v-app-bar-title>
             <v-spacer></v-spacer>
         </v-app-bar>
-        <v-toolbar color="primary" dark extended flat dense class="mx-auto pt-3">
+        <v-toolbar color="tertiary" dark extended flat dense class="mx-auto pt-3">
             <v-toolbar-title>
                 <v-img src="/images/logo-white.svg" alt="Logo Radjago" max-height="40" contain position="left center"></v-img>
             </v-toolbar-title>
@@ -26,7 +26,7 @@
                 <v-card-subtitle v-text="user.motor_type+(user.vehicle_number ? ' • ' : '')+user.vehicle_number"></v-card-subtitle>
             </v-card>
             <!-- status -->
-            <v-card class="mb-4 tertiary rounded-lg">
+            <v-card class="mb-4 primary rounded-lg">
                 <v-card-title>
                     <div>
                         <small class="white--text font-weight-normal">Saldo</small>

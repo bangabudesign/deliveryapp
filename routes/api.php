@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,6 +33,32 @@ Route::middleware(['auth:sanctum'])->group(function () {
             'status' => Response::HTTP_OK,
             'message' => 'Menampilkan data user',
             'data' => $request->user()
+        ];
+
+        return response()->json($response, Response::HTTP_OK);
+    });
+    Route::get('/slides', function (Request $request) {
+        $slides = [
+            [
+                'id' => 1,
+                'image' => '/images/slides/1.jpeg',
+                'title' => 'Slide 1',
+            ],
+            [
+                'id' => 2,
+                'image' => '/images/slides/2.jpeg',
+                'title' => 'Slide 2',
+            ],
+            [
+                'id' => 3,
+                'image' => '/images/slides/3.jpeg',
+                'title' => 'Slide 3',
+            ]
+        ];
+        $response = [
+            'status' => Response::HTTP_OK,
+            'message' => 'Menampilkan data user',
+            'data' => $slides
         ];
 
         return response()->json($response, Response::HTTP_OK);

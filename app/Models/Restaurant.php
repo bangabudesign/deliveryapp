@@ -10,6 +10,7 @@ class Restaurant extends Model
     use HasFactory;
 
     protected $fillable = [
+        'merchant_id',
         'name',
         'image',
         'lat',
@@ -20,8 +21,8 @@ class Restaurant extends Model
     ];
 
     protected $casts = [
-        'opening_hours' => 'datetime',
-        'closing_hours' => 'datetime',
+        'opening_hours' => 'datetime: H:i',
+        'closing_hours' => 'datetime: H:i',
     ];
 
     protected $appends = ['image_url', 'latlng'];
@@ -43,5 +44,10 @@ class Restaurant extends Model
     public function products()
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function merchant()
+    {
+         return $this->belongsTo(User::class, 'merchant_id');
     }
 }

@@ -6,6 +6,7 @@ Vue.use(VueRouter);
 // layouts
 import LayoutUser from './views/layouts/User'
 import LayoutDriver from './views/layouts/Driver'
+import LayoutMerchant from './views/layouts/Merchant'
 // auth
 import Login from './views/auth/Login'
 import Register from './views/auth/Register'
@@ -20,6 +21,11 @@ import RestoDetail from './views/pages/RestoDetail'
 import DriverHome from './views/pages/DriverHome'
 import DriverOrder from './views/pages/DriverOrder'
 import DriverProfile from './views/pages/DriverProfile'
+// merchant component
+import MerchantHome from './views/pages/MerchantHome'
+import MerchantOrder from './views/pages/MerchantOrder'
+import MerchantProfile from './views/pages/MerchantProfile'
+import MerchantRestoForm from './views/pages/MerchantRestoForm'
 
 const routes = [
     {
@@ -92,6 +98,34 @@ const routes = [
                 name: 'DriverProfile',
                 component: DriverProfile
             },
+        ]
+    },
+    {
+        path: '/merchant',
+        component: LayoutMerchant,
+        meta: { requiresAuth: true },
+        children: [
+            {
+                path: 'home',
+                name: 'MerchantHome',
+                component: MerchantHome
+            },
+            {
+                path: 'order',
+                name: 'MerchantOrder',
+                component: MerchantOrder
+            },
+            {
+                path: 'profile',
+                name: 'MerchantProfile',
+                component: MerchantProfile
+            },
+            {
+                path: 'resto/:id?',
+                name: 'MerchantRestoForm',
+                props: true,
+                component: MerchantRestoForm
+            }
         ]
     }
 ]

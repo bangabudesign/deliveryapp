@@ -54,6 +54,8 @@ export default {
                     this.$router.push({ name: 'Home' })
                 }else if(response.data.role == 'DRIVER') {
                     this.$router.push({ name: 'DriverHome' })
+                }else if(response.data.role == 'MERCHANT') {
+                    this.$router.push({ name: 'MerchantHome' })
                 }
             })
             .catch((error) => {

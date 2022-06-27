@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Notifications\DriverOrderCreated;
+use App\Notifications\OrderCreated;
+use App\Notifications\OrderSuccess;
+use App\Notifications\OrderTaken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -85,6 +90,9 @@ class OrderController extends Controller
         $order = Order::create($data);
         $order->save();
 
+        Notification::send($order->user, new OrderCreated($order));
+        Notification::send($order->driver, new DriverOrderCreated($order));
+
         $cartItem = Cart::where('user_id', $request->user()->id)
                         ->where('restaurant_id', $request->restaurant_id)
                         ->get();
@@ -133,6 +141,14 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         $order->update(['status' => $request->status]);
+
+        if ($order->status == 'TAKEN') {
+            Notification::send($order->user, new OrderTaken($order));
+        }
+
+        if ($order->status == 'PAID') {
+            Notification::send($order->user, new OrderSuccess($order));
+        }
 
         $response = [
             'status' => Response::HTTP_OK,
