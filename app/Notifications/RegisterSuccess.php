@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class WelcomeMessage extends Notification
+class RegisterSuccess extends Notification
 {
     use Queueable;
 
@@ -58,8 +58,9 @@ class WelcomeMessage extends Notification
     public function toWhatsApp($notifiable)
     {
         return (new WhatsAppTemplate)
-                ->templateName('welcome_message')
-                ->default($notifiable->name);
+                ->templateName('register_success')
+                ->default($notifiable->name)
+                ->default(strval('62'.$notifiable->phone));
     }
 
     /**
