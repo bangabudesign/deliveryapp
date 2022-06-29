@@ -11,7 +11,7 @@ const opts = {
             light: {
                 primary: '#7309a9',
                 accent: '#FF9800',
-                secondary: '#FAFAFA',
+                secondary: '#757575',
                 tertiary: '#09bbbd',
                 error: '#FF5252',
                 info: '#2196F3',
@@ -54,6 +54,8 @@ router.beforeEach((to, from, next) => {
             } else if (role == 'DRIVER' && path == 'driver') {
                 next()
             }  else if (role == 'MERCHANT' && path == 'merchant') {
+                next()
+            }  else if (role == 'ADMIN' && path == 'admin') {
                 next()
             } else {
                 Cookies.remove('token')

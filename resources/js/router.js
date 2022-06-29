@@ -7,6 +7,7 @@ Vue.use(VueRouter);
 import LayoutUser from './views/layouts/User'
 import LayoutDriver from './views/layouts/Driver'
 import LayoutMerchant from './views/layouts/Merchant'
+import LayoutAdmin from './views/layouts/Admin'
 // auth
 import Login from './views/auth/Login'
 import Register from './views/auth/Register'
@@ -26,6 +27,11 @@ import MerchantHome from './views/pages/MerchantHome'
 import MerchantOrder from './views/pages/MerchantOrder'
 import MerchantProfile from './views/pages/MerchantProfile'
 import MerchantRestoForm from './views/pages/MerchantRestoForm'
+// admin component
+import AdminDashboard from './views/pages/AdminDashboard'
+import AdminDriver from './views/pages/AdminDriver'
+import AdminMerchant from './views/pages/AdminMerchant'
+import AdminUser from './views/pages/AdminUser'
 
 const routes = [
     {
@@ -50,6 +56,10 @@ const routes = [
         component: LayoutUser,
         meta: { requiresAuth: true },
         children: [
+            {
+                path: '/app',
+                redirect: '/app/home'
+            },
             {
                 path: 'home',
                 name: 'Home',
@@ -84,6 +94,10 @@ const routes = [
         meta: { requiresAuth: true },
         children: [
             {
+                path: '/driver',
+                redirect: '/driver/home'
+            },
+            {
                 path: 'home',
                 name: 'DriverHome',
                 component: DriverHome
@@ -106,6 +120,10 @@ const routes = [
         meta: { requiresAuth: true },
         children: [
             {
+                path: '/merchant',
+                redirect: '/merchant/home'
+            },
+            {
                 path: 'home',
                 name: 'MerchantHome',
                 component: MerchantHome
@@ -126,6 +144,37 @@ const routes = [
                 props: true,
                 component: MerchantRestoForm
             }
+        ]
+    },
+    {
+        path: '/admin',
+        component: LayoutAdmin,
+        meta: { requiresAuth: true },
+        children: [
+            {
+                path: '/admin',
+                redirect: '/admin/dashboard'
+            },
+            {
+                path: 'dashboard',
+                name: 'AdminDashboard',
+                component: AdminDashboard
+            },
+            {
+                path: 'drivers',
+                name: 'AdminDriver',
+                component: AdminDriver
+            },
+            {
+                path: 'merchants',
+                name: 'AdminMerchant',
+                component: AdminMerchant
+            },
+            {
+                path: 'users',
+                name: 'AdminUser',
+                component: AdminUser
+            },
         ]
     }
 ]

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'SW-004';
+const CACHE_NAME = 'SW-005';
 const toCache = [
     '/',
     '/js/web.webmanifest',

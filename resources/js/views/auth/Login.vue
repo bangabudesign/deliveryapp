@@ -10,10 +10,10 @@
                         <v-text-field label="Password" v-model="data.password" :type="showPassword ? 'text' : 'password'" :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'" @click:append="showPassword = !showPassword" :error-messages="error.errors ? error.errors.password : ''"></v-text-field>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn color="primary" class="rounded-pill" block @click="login">Log In</v-btn>
+                        <v-btn color="primary" class="rounded-pill" large block @click="login">Log In</v-btn>
                     </v-card-actions>
                     <v-card-actions>
-                        <v-btn color="primary" class="rounded-pill" text block router :to="{name: 'Register'}">Belum punya akun? Register</v-btn>
+                        <v-btn color="primary" class="rounded-pill" text large block router :to="{name: 'Register'}">Belum punya akun? Register</v-btn>
                     </v-card-actions>
                 </v-card>
                 <v-snackbar v-model="snackbar" timeout="2000">
@@ -56,6 +56,8 @@ export default {
                     this.$router.push({ name: 'DriverHome' })
                 }else if(response.data.role == 'MERCHANT') {
                     this.$router.push({ name: 'MerchantHome' })
+                }else if(response.data.role == 'ADMIN') {
+                    this.$router.push({ name: 'AdminDashboard' })
                 }
             })
             .catch((error) => {

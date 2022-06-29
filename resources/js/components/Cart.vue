@@ -121,7 +121,7 @@
                         <v-card class="rounded-xl">
                             <v-card-title class="text-h5">Pilih Driver</v-card-title>
                             <v-card-text>
-                                <v-list style="margin-left: -24px; margin-right: -24px;">
+                                <v-list v-if="drivers.length" style="margin-left: -24px; margin-right: -24px;">
                                     <v-list-item-group>
                                         <v-list-item class="px-5" color="primary" dense v-for="(driver, i) in drivers" :key="i" @click="selectedDriver = driver, dialogDriver = false">
                                             <v-list-item-avatar>
@@ -139,6 +139,7 @@
                                         </v-list-item>
                                     </v-list-item-group>
                                 </v-list>
+                                <v-alert v-else icon="mdi-information" type="warning">Driver tidak tersedia!</v-alert>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>

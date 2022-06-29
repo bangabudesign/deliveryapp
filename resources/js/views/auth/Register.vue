@@ -12,10 +12,10 @@
                         <v-checkbox v-model="data.term" label="Saya menyetujui syarat & ketentuan yang berlaku" :error-messages="error.errors ? error.errors.term : ''"></v-checkbox>
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn color="primary" class="rounded-pill" block @click="register">Register</v-btn>
+                        <v-btn color="primary" class="rounded-pill" large block @click="register">Register</v-btn>
                     </v-card-actions>
                     <v-card-actions>
-                        <v-btn color="primary" class="rounded-pill" text block router :to="{name: 'Login'}">Sudah punya akun? Log In</v-btn>
+                        <v-btn color="primary" class="rounded-pill" text large block router :to="{name: 'Login'}">Sudah punya akun? Log In</v-btn>
                     </v-card-actions>
                 </v-card>
                 <v-snackbar v-model="snackbar" timeout="2000">

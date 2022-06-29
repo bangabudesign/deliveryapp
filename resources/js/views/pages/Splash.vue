@@ -18,8 +18,8 @@
                         </v-carousel>
                     </v-card-text>
                     <v-card-text>
-                        <v-btn color="primary" class="rounded-pill mb-4" block router :to="{name: 'Login'}">Login</v-btn>
-                        <v-btn color="primary" class="rounded-pill" outlined block router :to="{name: 'Register'}">Register</v-btn>
+                        <v-btn color="primary" class="rounded-pill mb-4" large block router :to="{name: 'Login'}">Login</v-btn>
+                        <v-btn color="primary" class="rounded-pill" outlined large block router :to="{name: 'Register'}">Register</v-btn>
                     </v-card-text>
                 </v-card>
             </v-container>
