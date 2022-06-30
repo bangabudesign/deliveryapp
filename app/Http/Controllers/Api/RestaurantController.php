@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,6 +13,9 @@ class RestaurantController extends Controller
 {
     public function index(Request $request)
     {
+        $lat = explode(',', $request->get('near_by'))[0] ?? null;
+        $lng = explode(',', $request->get('near_by'))[1] ?? null;
+
         $restaurants = Restaurant::when($request->get('q'), function ($query) use ($request) {
                 $query->orWhere('name', 'like', '%'.$request->get('q').'%');
             })
@@ -20,6 +24,17 @@ class RestaurantController extends Controller
             })
             ->when($request->user()->role == 'MERCHANT', function ($query) use ($request) {
                 $query->where('merchant_id', $request->user()->id);
+            })
+            ->when($request->get('near_by'), function ($query) use ($lat, $lng) {
+                $query->select(
+                    "*",
+                    DB::raw("6371 * acos(cos(radians(" . $lat . "))
+                    * cos(radians(restaurants.lat)) 
+                    * cos(radians(restaurants.lng) - radians(" . $lng . ")) 
+                    + sin(radians(" .$lat. ")) 
+                    * sin(radians(restaurants.lat))) AS distance"))
+                ->havingRaw('distance < 50')
+                ->orderBy('distance');
             })
             ->get();
 
@@ -85,9 +100,21 @@ class RestaurantController extends Controller
         return response()->json($response, Response::HTTP_OK);
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $restaurant = Restaurant::with('products')->findOrFail($id);
+        $lat = $request->user()->lat;
+        $lng = $request->user()->lng;
+        
+        $restaurant = Restaurant::with('products')
+            ->select(
+                "*",
+                DB::raw("6371 * acos(cos(radians(" . $lat . "))
+                * cos(radians(restaurants.lat)) 
+                * cos(radians(restaurants.lng) - radians(" . $lng . ")) 
+                + sin(radians(" .$lat. ")) 
+                * sin(radians(restaurants.lat))) AS distance"))
+            ->havingRaw('distance < 50')
+            ->findOrFail($id);
 
         $response = [
             'status' => Response::HTTP_OK,

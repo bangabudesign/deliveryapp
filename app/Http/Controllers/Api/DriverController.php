@@ -9,13 +9,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class DriverController extends Controller
 {
     public function index(Request $request)
     {
-        $drivers = User::query()->with('orders')
-            ->where('role', 'DRIVER')
+        $lat = explode(',', $request->get('near_by'))[0] ?? null;
+        $lng = explode(',', $request->get('near_by'))[1] ?? null;
+
+        $drivers = User::where('role', 'DRIVER')
             ->when($request->get('limit'), function ($query) use ($request) {
                 $query->limit($request->get('limit'));
             })
@@ -26,7 +29,19 @@ class DriverController extends Controller
                     $q->orWhere('status', 'TAKEN');
                 });
             })
+            ->when($request->get('near_by'), function ($query) use ($lat, $lng) {
+                $query->select(
+                    "*",
+                    DB::raw("6371 * acos(cos(radians(" . $lat . "))
+                    * cos(radians(users.lat)) 
+                    * cos(radians(users.lng) - radians(" . $lng . ")) 
+                    + sin(radians(" .$lat. ")) 
+                    * sin(radians(users.lat))) AS distance"))
+                ->havingRaw('distance < 50')
+                ->orderBy('distance');
+            })
             ->get();
+        
 
         $response = [
             'status' => Response::HTTP_OK,

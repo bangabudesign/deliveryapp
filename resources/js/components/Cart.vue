@@ -10,7 +10,7 @@
                     <v-btn icon @click="dialog = false">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
-                    <v-app-bar-title class="pl-0" v-text="restaurantName || 'Cart'"></v-app-bar-title>
+                    <v-app-bar-title class="pl-0" v-text="restaurant.name || 'Cart'"></v-app-bar-title>
                 </v-app-bar>
                 <v-container class="px-0 pb-16">
                     <v-list subheader two-line>
@@ -117,8 +117,8 @@
                     </v-dialog>
                     <!-- end dialog map -->
                     <!-- dalog driver -->
-                    <v-dialog v-model="dialogDriver" persistent max-width="400" content-class="rounded-xl">
-                        <v-card class="rounded-xl">
+                    <v-dialog v-model="dialogDriver" persistent max-width="400" content-class="rounded-lg">
+                        <v-card class="rounded-lg">
                             <v-card-title class="text-h5">Pilih Driver</v-card-title>
                             <v-card-text>
                                 <v-list v-if="drivers.length" style="margin-left: -24px; margin-right: -24px;">
@@ -129,13 +129,8 @@
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title v-text="driver.name"></v-list-item-title>
-                                                <v-list-item-subtitle v-text="'Bintang '+driver.rating"></v-list-item-subtitle>
+                                                <v-list-item-subtitle v-text="'Jarak '+driver.distance.toFixed(2)+' km dari '+restaurant.name"></v-list-item-subtitle>
                                             </v-list-item-content>
-                                            <v-list-item-action>
-                                                <v-btn icon>
-                                                    <v-icon color="grey lighten-1">mdi-information</v-icon>
-                                                </v-btn>
-                                            </v-list-item-action>
                                         </v-list-item>
                                     </v-list-item-group>
                                 </v-list>
@@ -167,8 +162,7 @@
 export default {
     props: {
         updateCart: Boolean,
-        restaurantId: Number,
-        restaurantName: String
+        restaurant: {},
     },
 
     data() {
@@ -203,15 +197,15 @@ export default {
 
     created () {
         this.getUser()
-        this.getDriver()
     },
 
     watch: {
         updateCart(val){
             this.initialize()
         },
-        restaurantId(val){
+        restaurant(val){
             this.initialize()
+            this.getDriver()
         }
     },
 
@@ -233,7 +227,7 @@ export default {
         async initialize() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/carts?restaurant_id=${this.restaurantId}`);
+                const response = await axios.get(`/api/carts?restaurant_id=${this.restaurant.id}`);
                 this.carts = response.data.data
                 this.summary = response.data.summary
                 this.$emit('cartData', this.carts);
@@ -250,6 +244,8 @@ export default {
                 const response = await axios.get(`/api/user`);
                 this.user = response.data.data
                 this.defaultUser = Object.assign({}, response.data.data)
+                this.initialize()
+                this.getDriver()
                 this.isLoading = false
             } catch (error) {
                 this.isLoading = false
@@ -260,7 +256,7 @@ export default {
         async getDriver() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/drivers?limit=5&is_working=1`);
+                const response = await axios.get(`/api/drivers?near_by=${this.restaurant.lat},${this.restaurant.lng}&limit=5&is_working=1`);
                 this.drivers = response.data.data
                 this.isLoading = false
             } catch (error) {
@@ -392,7 +388,7 @@ export default {
             try {
                 const response = await axios.post(`/api/orders`, {
                     driver_id : this.selectedDriver.id,
-                    restaurant_id : this.restaurantId,
+                    restaurant_id : this.restaurant.id,
                     lat : this.user.lat,
                     lng : this.user.lng,
                     delivery_address : this.user.address,

@@ -8,7 +8,7 @@
                 <v-card-title v-text="item.name" class="pl-0 d-inline-block text-truncate subtitle-2" style="max-width: 100%;"></v-card-title>
                 <v-card-subtitle class="pl-0 caption">
                     <div v-text="item.menu" class="text-muted"></div>
-                    <div>Jarak 0.8 km</div>
+                    <div v-text="'Jarak '+item.distance.toFixed(2)+' km'"></div>
                 </v-card-subtitle>
             </div>
         </v-card>

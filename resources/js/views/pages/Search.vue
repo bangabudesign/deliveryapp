@@ -87,30 +87,29 @@ export default {
         this.getUser()
         this.category = this.$route.query.category || ''
         this.searchTerm = this.$route.query.q || ''
-        this.initialize()
     },
 
     methods: {
         goBack() {
             this.$router.go(-1)
         },
-        getUser() {
-            this.isLoading = true
-            axios.get('/api/user')
-            .then((response) => {
-                this.isLoading = false
-                this.user = response.data.data
-                this.defaultUser = Object.assign({}, response.data.data)
-            })
-            .catch((error) => {
-                this.isLoading = false
-                this.error = error.response.data
-            });
-        },
-        async initialize() {
+        async getUser() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/restaurants?category=${this.category}&q=${this.searchTerm}`);
+                const response = await axios.get(`/api/user`);
+                this.user = response.data.data
+                this.defaultUser = Object.assign({}, response.data.data)
+                this.getRestaurants()
+                this.isLoading = false
+            } catch (error) {
+                this.isLoading = false
+                this.error = error.response.data
+            }
+        },
+        async getRestaurants() {
+            this.isLoading = true
+            try {
+                const response = await axios.get(`/api/restaurants?near_by=${this.user.lat},${this.user.lng}&category=${this.category}&q=${this.searchTerm}`);
                 this.restaurants = response.data.data
                 this.isLoading = false
             } catch (error) {
@@ -120,7 +119,7 @@ export default {
         },
         inputSearch() {
             this.$router.replace({ query: { category: this.category, q: this.searchTerm } })
-            this.initialize()
+            this.getRestaurants()
         },
         getLocation() {
             navigator.geolocation.getCurrentPosition(
@@ -234,6 +233,8 @@ export default {
                 this.isLoading = false
                 this.error = error.response.data
             });
+
+            this.defaultUser = Object.assign({}, this.user)
         },
     }
 };

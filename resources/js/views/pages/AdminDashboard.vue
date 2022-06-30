@@ -13,14 +13,10 @@
                     </v-card-text>
                 </v-card>
             </div>
-            <div id="map"></div>
+            <div id="map" style="height: calc(100vh - 120px); z-index: 1;"></div>
         </v-card>
     </v-container>
 </template>
-
-<style>
-    #map { height: calc(100vh - 120px); z-index: 1; }
-</style>
 
 <script>
 export default {
@@ -29,6 +25,7 @@ export default {
             isLoading: false,
             drivers: [],
             users: [],
+            restaurants: [],
         }
     },
 
@@ -53,13 +50,20 @@ export default {
             .catch((error) => {
                 this.isLoading = false
             });
-
             
             axios.get('/api/users')
             .then((response) => {
                 this.isLoading = false
                 this.users = response.data.data
-                this.loadMap()
+            })
+            .catch((error) => {
+                this.isLoading = false
+            });
+            
+            axios.get('/api/restaurants')
+            .then((response) => {
+                this.isLoading = false
+                this.restaurants = response.data.data
             })
             .catch((error) => {
                 this.isLoading = false
@@ -96,6 +100,12 @@ export default {
                 for (let i = 0; i < this.drivers.length; i++) {
                     L.marker(this.drivers[i].latlng, {icon: driverIcon}).addTo(map)
                         .bindPopup('<b>' + this.drivers[i].name + '</b><br/>' + this.drivers[i].vehicle_number );
+                }
+
+                // add resto marker
+                for (let i = 0; i < this.restaurants.length; i++) {
+                    L.marker(this.restaurants[i].latlng, {icon: storeIcon}).addTo(map)
+                        .bindPopup('<b>' + this.restaurants[i].name + '</b>' );
                 }
 
                 // add user marker

@@ -132,15 +132,28 @@ export default {
             ],
             slides: [],
             restaurants: [],
+            user: {}
         }
     },
 
     created () {
+        this.initialize()
         this.getSlides()
-        this.getRestaurants()
     },
 
     methods: {
+        async initialize() {
+            this.isLoading = true
+            try {
+                const response = await axios.get(`/api/user`);
+                this.user = response.data.data
+                this.getRestaurants()
+                this.isLoading = false
+            } catch (error) {
+                this.isLoading = false
+                this.error = error.response.data
+            }
+        },
         async getSlides() {
             this.isLoading = true
             try {
@@ -155,7 +168,7 @@ export default {
         async getRestaurants() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/restaurants`);
+                const response = await axios.get(`/api/restaurants?near_by=${this.user.lat},${this.user.lng}`);
                 this.restaurants = response.data.data
                 this.isLoading = false
             } catch (error) {
