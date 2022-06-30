@@ -8,11 +8,13 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\LogoutController;
 use App\Http\Controllers\Api\UpdateLocation;
 use App\Http\Controllers\Api\RestaurantController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\DriverController;
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\MerchantController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ImageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,9 +69,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::post('/update-location', [UpdateLocation::class, 'update']);
     Route::resource('/restaurants', RestaurantController::class)->only('index', 'show', 'store', 'update');
+    Route::resource('/products', ProductController::class)->only('store', 'update');
     Route::resource('/carts', CartController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('/orders', OrderController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('/drivers', DriverController::class)->only('index', 'store', 'update');
     Route::resource('/merchants', MerchantController::class)->only('index', 'store', 'update');
     Route::resource('/users', UserController::class)->only('index', 'store', 'update');
+    Route::resource('/images', ImageController::class)->only('index', 'store', 'destroy');
 });

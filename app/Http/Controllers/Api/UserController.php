@@ -135,6 +135,10 @@ class UserController extends Controller
             'lng' => $request->lng,
         ];
 
+        if ($request->avatar) {
+            $data['avatar'] = $request->avatar;
+        }
+
         if ($request->password) {
             $data['password'] = Hash::make($request->password);
         }

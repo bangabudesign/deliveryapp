@@ -88,6 +88,10 @@ class RestaurantController extends Controller
             'closing_hours' => $request->closing_hours,
         ];
 
+        if ($request->image) {
+            $data['image'] = $request->image;
+        }
+
         $restaurant = Restaurant::create($data);
         $restaurant->save();
 
@@ -166,6 +170,10 @@ class RestaurantController extends Controller
             'opening_hours' => $request->opening_hours,
             'closing_hours' => $request->closing_hours,
         ];
+
+        if ($request->image) {
+            $data['image'] = $request->image;
+        }
 
         $restaurant->update($data);
 

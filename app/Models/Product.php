@@ -21,7 +21,7 @@ class Product extends Model
     public function getImageUrlAttribute()
     {
         if ($this->image) {
-            return '/images/restaurants/'.$this->image;
+            return '/images/media/'.$this->image;
         } else {
             return 'https://cdn.vuetifyjs.com/images/cards/cooking.png';
         }

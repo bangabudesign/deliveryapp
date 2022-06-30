@@ -6,7 +6,7 @@
             </v-btn>
             <v-app-bar-title class="pl-0" v-text="restaurant.name + ' - ' +restaurant.address"></v-app-bar-title>
         </v-app-bar>
-        <v-toolbar color="primary" dark dense flat class="mx-auto" height="100px" src="https://cdn.vuetifyjs.com/images/cards/cooking.png">
+        <v-toolbar color="primary" dark dense flat class="mx-auto" height="100px" :src="restaurant.image_url">
             <v-btn icon @click="goBack">
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
@@ -18,6 +18,7 @@
         <v-container class="bg-white" style="min-height: calc(100vh - 148px);">
             <v-card class="mx-auto mb-6 rounded-lg" style="margin-top: -32px;">
                 <v-card-text class="pb-0">
+                    <v-file-input :rules="imageRules" accept="image/png, image/jpeg, image/bmp, image/webp" placeholder="Upload Gambar" prepend-icon="mdi-camera" label="Upload Gambar" @change="uploadRestoImage"></v-file-input>
                     <v-text-field label="Nama Resto" v-model="restaurant.name" outlined dense :error-messages="error.errors ? error.errors.name : ''"></v-text-field>
                     <v-text-field label="Jam Buka" placeholder="00:00" v-model="restaurant.opening_hours" outlined dense :error-messages="error.errors ? error.errors.opening_hours : ''"></v-text-field>
                     <v-text-field label="Jam Tutup" placeholder="00:00" v-model="restaurant.closing_hours" outlined dense :error-messages="error.errors ? error.errors.closing_hours : ''"></v-text-field>
@@ -58,7 +59,7 @@
                 <div class="d-flex">
                     <h2 class="text-h6 mb-4">Daftar Menu</h2>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" class="rounded-pill" text small>Tambah Menu</v-btn>
+                    <v-btn color="primary" class="rounded-pill" text small @click="dialog = true">Tambah Menu</v-btn>
                 </div>
                 <template v-if="isLoading">
                     <v-card class="d-flex flex-no-wrap mb-3 rounded-lg" outlined>
@@ -99,7 +100,7 @@
                         </v-card-text>
                     </v-card>
                 </template>
-                <v-card v-else class="d-flex flex-no-wrap mb-3 rounded-lg" v-for="(item, index) in restaurant.products" :key="item.id" outlined @click="showDetail(item)">
+                <v-card v-else class="d-flex flex-no-wrap mb-3 rounded-lg" v-for="(item, index) in restaurant.products" :key="item.id" outlined @click="editMenu(item)">
                     <v-avatar class="ma-3 mr-0 rounded-lg" size="100" rounded>
                         <v-img :src="item.image_url"></v-img>
                     </v-avatar>
@@ -112,30 +113,23 @@
                 </v-card>
             </template>
             <!-- dialog detail -->
-            <v-dialog v-model="dialogDetail" scrollable max-width="400px" content-class="rounded-xl">
-                <v-card flat class="rounded-xl">
-                <v-toolbar flat dark color="primary" prominent :src="detailItem.image_url" height="200px">
-                    <v-btn icon dark @click="dialogDetail = false">
+            <v-dialog v-model="dialog" scrollable max-width="400px" content-class="rounded-lg">
+                <v-card flat class="rounded-lg">
+                <v-toolbar flat dark color="primary" prominent :src="editedItem.image_url" height="200px">
+                    <v-btn icon dark @click="dialog = false">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </v-toolbar>
-                <v-card-title class="subtitle-1 mb-3" v-text="detailItem.name">
-                </v-card-title>
-                <v-card-subtitle class="text-h5" v-text="numberFormat(detailItem.price)"></v-card-subtitle>
-                <v-card-text>
-                    <div class="d-flex justify-center align-center mb-5">
-                        <v-btn color="accent" dark fab small depressed @click="decreaseQty()">
-                            <v-icon>mdi-minus</v-icon>
-                        </v-btn>
-                        <div class="px-5 text-h6 text-dark" v-text="detailItem.qty"></div>
-                        <v-btn color="accent" dark fab small depressed @click="increaseQty()">
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
-                    </div>
-                    <v-textarea v-model="detailItem.note" label="Catatan Tambahan" rows="2"></v-textarea>
-                    <v-btn color="primary" class="rounded-pill" large block @click="addToCart(detailItem)" :loading="isLoading">{{ detailItem.cart_id ? 'Update Cart' : 'Add to Cart - ' + numberFormat(detailItem.price) }}</v-btn>
-                    <v-btn v-if="detailItem.cart_id" color="danger" text class="rounded-pill mt-3 red lighten-5" large block @click="deleteFromCart(detailItem)" :loading="isLoading">Remove from Cart</v-btn>
+                <v-card-text class="pt-6">
+                    <v-file-input :rules="imageRules" accept="image/png, image/jpeg, image/bmp, image/webp" placeholder="Upload Gambar" prepend-icon="mdi-camera" label="Upload Gambar" @change="uploadProductImage"></v-file-input>
+                    <v-text-field label="Nama Menu" v-model="editedItem.name" outlined dense :rules="rules" :error-messages="error.errors ? error.errors.name : ''"></v-text-field>
+                    <v-text-field label="Harga" type="number" v-model="editedItem.price" outlined dense :rules="rules" :error-messages="error.errors ? error.errors.price : ''"></v-text-field>
                 </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text :loading="isLoading" @click="close">Close</v-btn>
+                    <v-btn color="primary" text :loading="isLoading" @click="saveMenu">Save</v-btn>
+                </v-card-actions>
                 </v-card>
             </v-dialog>
             <!-- end dialog detail -->
@@ -144,19 +138,24 @@
 </template>
 
 <script>
-import Cart from '../../components/Cart.vue';
 export default {
     props: ['id'],
-    components: {
-        Cart
-    },
     data() {
         return {
             isLoading: false,
-            updateCart: false,
             locationDisable: false,
+            dialog: false,
+            rules: [
+                value => !!value || 'Wajib Disi.',
+            ],
+            imageRules: [
+                value => !value || value.size < 2000000 || 'Gambar tidak boleh lebih dari 2 MB!',
+            ],
             restaurant: {
+                id: '',
                 name: '',
+                iamge: '',
+                image_url: '',
                 lat: '',
                 lng: '',
                 latlng: [],
@@ -165,22 +164,32 @@ export default {
                 closing_hours: '',
                 products: []
             },
-            dialogDetail: false,
-            detailItem: {
-                restaurant_id: '',
-                product_id: '',
-                image_url: '',
+            editedIndex: -1,
+            editedItem: {
+                restaurant_id: this.id,
                 name: '',
+                image: '',
                 price: '',
-                qty: 1,
-                note: ''
+            },
+            defaultItem: {
+                restaurant_id: this.id,
+                name: '',
+                image: '',
+                price: '',
             },
             error: {}
         }
     },
 
+    watch: {
+        dialog (val) {
+            val || this.close()
+        },
+    },
+
     created () {
         this.initialize()
+        this.getLocation()
     },
 
     methods: {
@@ -238,68 +247,46 @@ export default {
             }
         },
 
-        async showDetail(item) {
-            this.isLoading = true
-            this.detailItem = Object.assign({}, {
-                cart_id: item.cart_id,
-                restaurant_id: this.restaurant.id,
-                product_id: item.id,
-                image_url: item.image_url,
-                name: item.name,
-                price: item.price,
-                qty: item.qty || 1,
-                note: item.note
+        editMenu (item) {
+            this.editedIndex = this.restaurant.products.indexOf(item)
+            this.editedItem = Object.assign({}, item)
+            this.dialog = true
+        },
+        
+        close () {
+            this.dialog = false
+            this.$nextTick(() => {
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
             })
-            this.dialogDetail = true
-            this.isLoading = false
+            this.error = {}
         },
 
-        decreaseQty() {
-            if(this.detailItem.qty > 1) {
-                this.detailItem.qty = this.detailItem.qty - 1
-            }
-        },
-
-        increaseQty() {
-            this.detailItem.qty = this.detailItem.qty + 1
-        },
-
-        async addToCart(item) {
-            this.isLoading = true
-            try {
-                const response = await axios.post(`/api/carts`, item);
-                this.isLoading = false
-                this.updateCart = !this.updateCart
-                this.dialogDetail = false
-            } catch (error) {
-                this.isLoading = false
-                this.error = error.response.data
-            }
-        },
-
-        async deleteFromCart(item) {
-            this.isLoading = true
-            try {
-                const response = await axios.delete(`/api/carts/${item.cart_id}`);
-                this.isLoading = false
-                this.updateCart = !this.updateCart
-                var productIndex = this.restaurant.products.findIndex((product => product.id == item.product_id));
-                this.restaurant.products[productIndex].cart_id = undefined
-                this.restaurant.products[productIndex].qty = 1
-                this.restaurant.products[productIndex].note = ''
-                this.dialogDetail = false
-            } catch (error) {
-                this.isLoading = false
-                this.error = error.response.data
-            }
-        },
-
-        sycronize(carts){
-            for (let i = 0; i < carts.length; i++) {
-                var productIndex = this.restaurant.products.findIndex((product => product.id == carts[i].product_id));
-                this.restaurant.products[productIndex].cart_id = carts[i].id
-                this.restaurant.products[productIndex].qty = carts[i].qty
-                this.restaurant.products[productIndex].note = carts[i].note
+        async saveMenu () {
+            if (this.editedIndex > -1) {
+                this.isLoading = true
+                try {
+                    const response = await axios.put('/api/products/' + this.editedItem.id, this.editedItem);
+                    this.editedItem = response.data.data
+                    Object.assign(this.restaurant.products[this.editedIndex], this.editedItem)
+                    this.isLoading = false
+                    this.close()
+                } catch (error) {
+                    this.isLoading = false
+                    this.error = error.response.data
+                }
+            } else {
+                this.isLoading = true
+                try {
+                    const response = await axios.post('/api/products', this.editedItem);
+                    this.editedItem = response.data.data
+                    this.restaurant.products.push(this.editedItem)
+                    this.isLoading = false
+                    this.close()
+                } catch (error) {
+                    this.isLoading = false
+                    this.error = error.response.data
+                }
             }
         },
 
@@ -307,6 +294,8 @@ export default {
             navigator.geolocation.getCurrentPosition(
                 // Success callback
                 (position) => {
+                    this.restaurant.lat = position.coords.latitude
+                    this.restaurant.lng = position.coords.longitude
                     this.restaurant.latlng = [position.coords.latitude, position.coords.longitude]
                     this.loadMap()
                 },
@@ -385,6 +374,65 @@ export default {
                 setTimeout(() => {
                     this.loadMap()
                 }, 1000);
+            }
+        },
+        
+        uploadRestoImage(e) {
+            let files = e
+            if (files.size >= 2000000) {
+                console.log('Gambar tidak boleh lebih dari 2 MB!')
+            } else {
+                let formData = new FormData()
+                let image = files
+                formData.append('image', image)
+
+                if (files) {
+                    this.isLoading = true
+                    axios.post('/api/images', formData).then((response) => {
+                        this.restaurant.image = response.data.data.image
+                        this.restaurant.image_url = response.data.data.image_url
+                        console.log(response.data.message)
+                        this.isLoading = false
+                        this.errors = {}
+                    }).catch((error) => {
+                        if (error.response.status = 422) {
+                            this.errors = error.response.data.errors
+                            // Error notification
+                            console.log(error.response.data.message)
+                        }
+                        this.isLoading = false
+                    })
+                }
+            }
+        },
+
+        
+        uploadProductImage(e) {
+            let files = e
+            if (files.size >= 2000000) {
+                console.log('Gambar tidak boleh lebih dari 2 MB!')
+            } else {
+                let formData = new FormData()
+                let image = files
+                formData.append('image', image)
+
+                if (files) {
+                    this.isLoading = true
+                    axios.post('/api/images', formData).then((response) => {
+                        this.editedItem.image = response.data.data.image
+                        this.editedItem.image_url = response.data.data.image_url
+                        console.log(response.data.message)
+                        this.isLoading = false
+                        this.errors = {}
+                    }).catch((error) => {
+                        if (error.response.status = 422) {
+                            this.errors = error.response.data.errors
+                            // Error notification
+                            console.log(error.response.data.message)
+                        }
+                        this.isLoading = false
+                    })
+                }
             }
         },
     }

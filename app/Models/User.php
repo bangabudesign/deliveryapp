@@ -62,7 +62,7 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute()
     {
         if ($this->avatar) {
-            return '/images/avatar/'.$this->avatar;
+            return '/images/media/'.$this->avatar;
         } else {
             return 'https://cdn.vuetifyjs.com/images/john.jpg';
         }
@@ -86,5 +86,10 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class, 'driver_id');
+    }
+
+    public function media()
+    {
+        return $this->hasMany(Order::class);
     }
 }
