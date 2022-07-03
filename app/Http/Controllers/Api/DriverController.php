@@ -37,7 +37,7 @@ class DriverController extends Controller
                     * cos(radians(users.lng) - radians(" . $lng . ")) 
                     + sin(radians(" .$lat. ")) 
                     * sin(radians(users.lat))) AS distance"))
-                ->havingRaw('distance < 50')
+                ->havingRaw('distance < 5')
                 ->orderBy('distance');
             })
             ->get();
@@ -64,7 +64,7 @@ class DriverController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'phone' => 'required|numeric',
+            'phone' => 'required|numeric|unique:users,phone',
             'motor_type' => 'required',
             'vehicle_number' => 'required',
             'lat' => 'required|numeric',
@@ -74,6 +74,7 @@ class DriverController extends Controller
             'required' => ':attribute tidak boleh kosong.',
             'numeric' => ':attribute harus berupa angka.',
             'min' => ':attribute minimal :min karakter.',
+            'unique' => ':attribute sudah digunakan coba yang lain.',
         ], [
             'name' => 'Nama',
             'phone' => 'WhatsApp',
@@ -101,7 +102,7 @@ class DriverController extends Controller
             'lat' => $request->lat,
             'lng' => $request->lng,
             'role' => 'DRIVER',
-            'is_working' => 1,
+            'is_working' => $request->is_working,
             'password' => Hash::make($request->password),
         ];
 
@@ -172,7 +173,7 @@ class DriverController extends Controller
             'vehicle_number' => $request->vehicle_number,
             'lat' => $request->lat,
             'lng' => $request->lng,
-            'is_working' => 1,
+            'is_working' => $request->is_working,
         ];
 
         if ($request->password) {

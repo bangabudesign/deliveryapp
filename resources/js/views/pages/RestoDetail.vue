@@ -37,7 +37,7 @@
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>Jarak</v-list-item-title>
-                            <v-list-item-subtitle>{{ restaurant.distance.toFixed(2)+' km dari tempat Anda' }}</v-list-item-subtitle>
+                            <v-list-item-subtitle>{{ Number(restaurant.distance).toFixed(2)+' km dari tempat Anda' }}</v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-icon class="my-auto">
                             <v-icon>mdi-chevron-right</v-icon>
@@ -115,7 +115,7 @@
                 </v-card>
             </v-dialog>
             <!-- end dialog detail -->
-            <cart :restaurant="restaurant" :updateCart="updateCart" @cartData="sycronize" />
+            <cart v-if="restaurant && restaurant.id" :restaurant="restaurant" :updateCart="updateCart" @cartData="sycronize" />
         </v-container>
     </section>
 </template>

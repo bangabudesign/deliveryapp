@@ -104,9 +104,13 @@ class UserController extends Controller
             'phone' => 'required|numeric',
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
+            'role' => 'required',
+            'motor_type' => 'required_if:role,DRIVER',
+            'vehicle_number' => 'required_if:role,DRIVER',
             'password' => 'nullable|min:8',
         ], [
             'required' => ':attribute tidak boleh kosong.',
+            'required_if' => ':attribute tidak boleh kosong jika role adalah :role.',
             'numeric' => ':attribute harus berupa angka.',
             'min' => ':attribute minimal :min karakter.',
         ], [
@@ -114,6 +118,7 @@ class UserController extends Controller
             'phone' => 'WhatsApp',
             'lat' => 'Latitude',
             'lng' => 'Longtitude',
+            'role' => 'Role',
             'password' => 'Password',
         ]);
 
@@ -137,6 +142,13 @@ class UserController extends Controller
 
         if ($request->avatar) {
             $data['avatar'] = $request->avatar;
+        }
+
+        if ($request->role == 'DRIVER') {
+            $data['role'] = $request->role;
+            $data['motor_type'] = $request->motor_type;
+            $data['vehicle_number'] = $request->vehicle_number;
+            $data['is_working'] = $request->is_working;
         }
 
         if ($request->password) {

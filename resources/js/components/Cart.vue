@@ -129,7 +129,7 @@
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title v-text="driver.name"></v-list-item-title>
-                                                <v-list-item-subtitle v-text="'Jarak '+driver.distance.toFixed(2)+' km dari '+restaurant.name"></v-list-item-subtitle>
+                                                <v-list-item-subtitle v-text="'Jarak '+Number(driver.distance).toFixed(2)+' km dari resto'"></v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </v-list-item-group>

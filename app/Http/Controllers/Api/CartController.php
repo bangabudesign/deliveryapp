@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\Delivery;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
@@ -19,9 +21,14 @@ class CartController extends Controller
             ->where('user_id', $request->user()->id)
             ->get();
         
+        $restaurant = Restaurant::findOrFail($request->get('restaurant_id'));
+        $user = $request->user();
+
+        $delivery_fee = Delivery::getFee($user->lat, $user->lng, $restaurant->lat, $restaurant->lng);
+        
         $summary = [
             'sub_total' => $carts->sum('total'),
-            'delivery_fee' => 7000,
+            'delivery_fee' => $delivery_fee,
             'service_fee' => 5000,
         ];
 

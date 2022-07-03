@@ -33,7 +33,7 @@ class RestaurantController extends Controller
                     * cos(radians(restaurants.lng) - radians(" . $lng . ")) 
                     + sin(radians(" .$lat. ")) 
                     * sin(radians(restaurants.lat))) AS distance"))
-                ->havingRaw('distance < 50')
+                ->havingRaw('distance < 5')
                 ->orderBy('distance');
             })
             ->get();
@@ -106,18 +106,20 @@ class RestaurantController extends Controller
 
     public function show($id, Request $request)
     {
-        $lat = $request->user()->lat;
-        $lng = $request->user()->lng;
+        $lat = $request->user()->lat ?? null;
+        $lng = $request->user()->lng ?? null;
         
         $restaurant = Restaurant::with('products')
-            ->select(
-                "*",
-                DB::raw("6371 * acos(cos(radians(" . $lat . "))
-                * cos(radians(restaurants.lat)) 
-                * cos(radians(restaurants.lng) - radians(" . $lng . ")) 
-                + sin(radians(" .$lat. ")) 
-                * sin(radians(restaurants.lat))) AS distance"))
-            ->havingRaw('distance < 50')
+            ->when($lat && $lng, function ($query) use ($lat, $lng) {
+                $query->select(
+                    "*",
+                    DB::raw("6371 * acos(cos(radians(" . $lat . "))
+                    * cos(radians(restaurants.lat)) 
+                    * cos(radians(restaurants.lng) - radians(" . $lng . ")) 
+                    + sin(radians(" .$lat. ")) 
+                    * sin(radians(restaurants.lat))) AS distance"))
+                ->havingRaw('distance < 50');
+            })
             ->findOrFail($id);
 
         $response = [

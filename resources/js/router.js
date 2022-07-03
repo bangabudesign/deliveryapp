@@ -37,7 +37,8 @@ const routes = [
     {
         path: '/',
         name: 'Splash',
-        component: Splash
+        component: Splash,
+        meta: { requiresGuest: true },
     },
     {
         path: '/login',

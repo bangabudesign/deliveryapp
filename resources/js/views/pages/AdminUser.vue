@@ -28,6 +28,20 @@
                                 <v-col cols="12">
                                     <v-text-field label="Longtitude" type="number" v-model="editedItem.lng" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.lng : ''"></v-text-field>
                                 </v-col>
+                                <template v-if="editedIndex > -1">
+                                <v-col cols="12">
+                                    <v-select label="Role" :items="['USER','DRIVER']" v-model="editedItem.role" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.role : ''"></v-select>
+                                </v-col>
+                                <v-col cols="12" v-if="editedItem.role == 'DRIVER'">
+                                    <v-select label="Is Working?" :items="[1,0]" v-model="editedItem.is_working" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.is_working : ''"></v-select>
+                                </v-col>
+                                <v-col cols="12" v-if="editedItem.role == 'DRIVER'">
+                                    <v-text-field label="Motor Type" v-model="editedItem.motor_type" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.motor_type : ''"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" v-if="editedItem.role == 'DRIVER'">
+                                    <v-text-field label="No Polisi" v-model="editedItem.vehicle_number" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.vehicle_number : ''"></v-text-field>
+                                </v-col>
+                                </template>
                                 <v-col cols="12">
                                     <v-text-field label="Password" type="password" v-model="editedItem.password" outlined dense hide-details="auto" :error-messages="error.errors ? error.errors.password : ''"></v-text-field>
                                 </v-col>

@@ -99,6 +99,7 @@ export default {
     data() {
         return {
             isLoading: false,
+            locationDisable: true,
             searchTerm: '',
             menus: [
                 {
@@ -147,6 +148,7 @@ export default {
             try {
                 const response = await axios.get(`/api/user`);
                 this.user = response.data.data
+                this.getLocation()
                 this.getRestaurants()
                 this.isLoading = false
             } catch (error) {
@@ -180,7 +182,35 @@ export default {
             if(this.searchTerm.length > 2) {
                 this.$router.push({ name: 'Search', query: { q: this.searchTerm } })
             }
-        }
+        },
+        getLocation() {
+            navigator.geolocation.getCurrentPosition(
+                // Success callback
+                (position) => {
+                    this.user.latlng = [position.coords.latitude, position.coords.longitude]
+                    this.user.lat = position.coords.latitude
+                    this.user.lng = position.coords.longitude
+                    this.updateLocation()
+                },
+                // Optional error callback
+                (error) => {
+                    console.log("please enable location")
+                    this.locationDisable = true
+                }
+            );
+        },
+        updateLocation() {
+            this.isLoading = true
+            axios.post('/api/update-location', this.user)
+            .then((response) => {
+                this.isLoading = false
+                this.dialogMaps = false
+            })
+            .catch((error) => {
+                this.isLoading = false
+                this.error = error.response.data
+            });
+        },
     }
 };
 </script>

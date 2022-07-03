@@ -29,6 +29,9 @@
                                     <v-text-field label="No Polisi" v-model="editedItem.vehicle_number" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.vehicle_number : ''"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
+                                    <v-select label="Is Working?" :items="[1,0]" v-model="editedItem.is_working" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.is_working : ''"></v-select>
+                                </v-col>
+                                <v-col cols="12">
                                     <v-text-field label="Latitude" type="number" v-model="editedItem.lat" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.lat : ''"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
