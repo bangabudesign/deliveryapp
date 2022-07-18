@@ -22,6 +22,7 @@ import RestoDetail from './views/pages/RestoDetail'
 import DriverHome from './views/pages/DriverHome'
 import DriverOrder from './views/pages/DriverOrder'
 import DriverProfile from './views/pages/DriverProfile'
+import DriverDeposit from './views/pages/DriverDeposit'
 // merchant component
 import MerchantHome from './views/pages/MerchantHome'
 import MerchantOrder from './views/pages/MerchantOrder'
@@ -32,6 +33,10 @@ import AdminDashboard from './views/pages/AdminDashboard'
 import AdminDriver from './views/pages/AdminDriver'
 import AdminMerchant from './views/pages/AdminMerchant'
 import AdminUser from './views/pages/AdminUser'
+import AdminDeposit from './views/pages/AdminDeposit'
+import AdminTransaction from './views/pages/AdminTransaction'
+import AdminBonus from './views/pages/AdminBonus'
+import AdminBank from './views/pages/AdminBank'
 
 const routes = [
     {
@@ -113,6 +118,11 @@ const routes = [
                 name: 'DriverProfile',
                 component: DriverProfile
             },
+            {
+                path: 'deposit',
+                name: 'DriverDeposit',
+                component: DriverDeposit
+            },
         ]
     },
     {
@@ -175,6 +185,26 @@ const routes = [
                 path: 'users',
                 name: 'AdminUser',
                 component: AdminUser
+            },
+            {
+                path: 'deposits',
+                name: 'AdminDeposit',
+                component: AdminDeposit
+            },
+            {
+                path: 'transactions',
+                name: 'AdminTransaction',
+                component: AdminTransaction
+            },
+            {
+                path: 'bonuses',
+                name: 'AdminBonus',
+                component: AdminBonus
+            },
+            {
+                path: 'banks',
+                name: 'AdminBank',
+                component: AdminBank
             },
         ]
     }

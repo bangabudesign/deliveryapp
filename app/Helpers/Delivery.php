@@ -17,7 +17,7 @@ class Delivery {
         $distance = round($angle * $earthRadius);
 
 
-        $price_1 = ($distance > 0) ? 5000 : 0; $distance =  ($distance > 0)? $distance - 1 :  0;
+        $price_1 = ($distance > 0) ? 5000 : 5000; $distance =  ($distance > 0)? $distance - 1 :  0;
         $price_2 = ($distance - 1) > 0 ? 5000 : ($distance * 5000); $distance = ($distance-1)>0 ? $distance - 1 : 0;
         $price_3 = ($distance > 0) ? ($distance * 3000) : 0;
 

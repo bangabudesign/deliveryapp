@@ -57,7 +57,7 @@ class User extends Authenticatable
         'phone_verified_at' => 'datetime',
     ];
 
-    protected $appends = ['avatar_url', 'rating', 'latlng'];
+    protected $appends = ['avatar_url', 'rating', 'latlng', 'total_balance'];
 
     public function getAvatarUrlAttribute()
     {
@@ -66,6 +66,11 @@ class User extends Authenticatable
         } else {
             return 'https://cdn.vuetifyjs.com/images/john.jpg';
         }
+    }
+    
+    public function getTotalBalanceAttribute()
+    {
+        return $this->deposits->where('status', 'SUCCESS')->sum('total') + $this->bonuses->sum('amount');
     }
 
     public function getRatingAttribute()
@@ -91,5 +96,15 @@ class User extends Authenticatable
     public function media()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function deposits()
+    {
+        return $this->hasMany(Deposit::class);
+    }
+
+    public function bonuses()
+    {
+        return $this->hasMany(Bonus::class, 'merchant_id');
     }
 }

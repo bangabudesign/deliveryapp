@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bonus;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Models\Transaction;
 use App\Notifications\DriverOrderCreated;
 use App\Notifications\OrderCreated;
 use App\Notifications\OrderSuccess;
@@ -26,6 +28,7 @@ class OrderController extends Controller
             ->when($request->user()->role == 'USER', function ($query) use ($request) {
                 $query->where('user_id', $request->user()->id);
             })
+            ->orderBy('updated_at', 'DESC')
             ->get();
 
         $response = [
@@ -148,6 +151,32 @@ class OrderController extends Controller
 
         if ($order->status == 'PAID') {
             Notification::send($order->user, new OrderSuccess($order));
+            $delivery_fee = ($order->delivery_fee / 100) * 10;
+            Transaction::create([
+                'order_id' => $order->id,
+                'driver_id' => $order->driver_id,
+                'amount' => $delivery_fee,
+                'notes' => 'Potongan ongkir 10%',
+            ]);
+            $service_fee = $order->service_fee;
+            Transaction::create([
+                'order_id' => $order->id,
+                'driver_id' => $order->driver_id,
+                'amount' => $service_fee,
+                'notes' => 'Service fee 50%',
+            ]);
+            Bonus::create([
+                'order_id' => $order->id,
+                'merchant_id' => $order->restaurant->merchant_id,
+                'amount' => $delivery_fee / 2,
+                'notes' => 'Delivery fee 50%',
+            ]);
+            Bonus::create([
+                'order_id' => $order->id,
+                'merchant_id' => $order->restaurant->merchant_id,
+                'amount' => $service_fee / 2,
+                'notes' => 'Service fee 50%',
+            ]);
         }
 
         $response = [

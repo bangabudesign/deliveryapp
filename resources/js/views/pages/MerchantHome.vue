@@ -17,13 +17,13 @@
                 <v-card-title>
                     <div>
                         <small class="dark--text font-weight-normal">Saldo</small>
-                        <div class="dark--text" style="margin-top: -8px;">Rp 200,000</div>
+                        <div class="dark--text" style="margin-top: -8px;">Rp  {{ user ? numberFormat(user.total_balance) : 0 }}</div>
                     </div>
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-title>
                     <v-row style="margin-left:-4px; margin-right:-4px;">
-                        <v-col cols="4" class="px-1" v-for="menu in menus" :key="menu.id">
+                        <v-col cols="6" class="px-1" v-for="menu in menus" :key="menu.id">
                             <v-btn :color="menu.color" dark elevation="0" class="rounded-pill py-4" x-small block route :to="{ name: 'Search', query: {category: menu.label.toLowerCase()} }">
                                 <v-icon color="white" left>{{menu.icon}}</v-icon> {{menu.label}}</v-btn>
                         </v-col>
@@ -87,13 +87,13 @@ export default {
             isLoading: false,
             user: {},
             menus: [
-                {
-                    id: 1,
-                    icon: 'mdi-plus-circle',
-                    color: '#4CAF50',
-                    icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Top Up'
-                },
+                // {
+                //     id: 1,
+                //     icon: 'mdi-plus-circle',
+                //     color: '#4CAF50',
+                //     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+                //     label: 'Top Up'
+                // },
                 {
                     id: 2,
                     icon: 'mdi-arrow-up-bold-circle',
@@ -120,6 +120,15 @@ export default {
     },
 
     methods: {
+        numberFormat(n = 0, c = 0, d, t) {
+        var c = isNaN(c = Math.abs(c)) ? 2 : c, 
+            d = d == undefined ? "." : d, 
+            t = t == undefined ? "," : t, 
+            s = n < 0 ? "-" : "", 
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+            j = (j = i.length) > 3 ? j % 3 : 0;
+            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+        },
         async initialize() {
             this.isLoading = true
             try {

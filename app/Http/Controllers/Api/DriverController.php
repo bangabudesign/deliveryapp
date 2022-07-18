@@ -19,6 +19,9 @@ class DriverController extends Controller
         $lng = explode(',', $request->get('near_by'))[1] ?? null;
 
         $drivers = User::where('role', 'DRIVER')
+            ->when($request->get('q'), function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%'.$request->get('q').'%');
+            })
             ->when($request->get('limit'), function ($query) use ($request) {
                 $query->limit($request->get('limit'));
             })
@@ -37,7 +40,7 @@ class DriverController extends Controller
                     * cos(radians(users.lng) - radians(" . $lng . ")) 
                     + sin(radians(" .$lat. ")) 
                     * sin(radians(users.lat))) AS distance"))
-                ->havingRaw('distance < 5')
+                ->havingRaw('distance < 10')
                 ->orderBy('distance');
             })
             ->get();
@@ -182,6 +185,36 @@ class DriverController extends Controller
 
         $driver->update($data);
 
+        $response = [
+            'status' => Response::HTTP_OK,
+            'message' => 'Success',
+            'data' => $driver
+        ];
+
+        return response()->json($response, Response::HTTP_OK);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'is_working' => 'required|integer',
+        ], [
+            'required' => ':attribute tidak boleh kosong.',
+            'integer' => ':attribute harus berupa angka.',
+        ], [
+            'is_working' => 'Status',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'status' => Response::HTTP_BAD_REQUEST,
+                'message' => 'Data yang di input tidak valid',
+                'errors' => $validator->messages()
+            ];
+            return response()->json($response, Response::HTTP_BAD_REQUEST);
+        }
+
+        $driver = $request->user()->update(['is_working' => $request->is_working]);
         $response = [
             'status' => Response::HTTP_OK,
             'message' => 'Success',

@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\LogoutController;
+use App\Http\Controllers\Api\BankController;
 use App\Http\Controllers\Api\UpdateLocation;
 use App\Http\Controllers\Api\RestaurantController;
 use App\Http\Controllers\Api\ProductController;
@@ -15,6 +16,9 @@ use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\MerchantController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ImageController;
+use App\Http\Controllers\Api\DepositController;
+use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\BonusController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +72,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         return response()->json($response, Response::HTTP_OK);
     });
     Route::post('/update-location', [UpdateLocation::class, 'update']);
+    Route::post('/update-status', [DriverController::class, 'updateStatus']);
     Route::resource('/restaurants', RestaurantController::class)->only('index', 'show', 'store', 'update');
     Route::resource('/products', ProductController::class)->only('store', 'update');
     Route::resource('/carts', CartController::class)->only('index', 'store', 'update', 'destroy');
@@ -76,4 +81,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('/merchants', MerchantController::class)->only('index', 'store', 'update');
     Route::resource('/users', UserController::class)->only('index', 'store', 'update');
     Route::resource('/images', ImageController::class)->only('index', 'store', 'destroy');
+    Route::resource('/deposits', DepositController::class)->only('index', 'store', 'update');
+    Route::resource('/transactions', TransactionController::class)->only('index', 'store', 'update');
+    Route::resource('/bonuses', BonusController::class)->only('index', 'store', 'update');
+    Route::resource('/banks', BankController::class)->only('index', 'store', 'update');
 });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\Delivery;
 use App\Http\Controllers\Controller;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
@@ -121,6 +122,8 @@ class RestaurantController extends Controller
                 ->havingRaw('distance < 50');
             })
             ->findOrFail($id);
+        
+        $restaurant['delivery_fee'] = Delivery::getFee($lat, $lng, $restaurant->lat, $restaurant->lng);
 
         $response = [
             'status' => Response::HTTP_OK,

@@ -77,7 +77,7 @@
                         <div class="subtitle-2 font-weight-bold">Rp{{ numberFormat(summary.total) }}</div>
                     </div>
                     <v-bottom-navigation fixed dark horizontal>
-                        <v-btn color="primary" large block :disabled="!selectedDriver.id" @click="processOrder">Proses Pesanan <v-icon>mdi-arrow-right</v-icon></v-btn>
+                        <v-btn color="primary" large block :disabled="!selectedDriver.id || isLoading" :loading="isLoading" @click="processOrder">Proses Pesanan <v-icon>mdi-arrow-right</v-icon></v-btn>
                     </v-bottom-navigation>
                     <!-- dalog map -->
                     <v-dialog v-model="dialogMaps" persistent max-width="500">
@@ -147,7 +147,7 @@
                     <v-snackbar v-model="snackbar" timeout="2000">
                         {{ error.message }}
                         <template v-slot:action="{ attrs }">
-                            <v-btn color="accent" text v-bind="attrs" click="snackbar = false">Close</v-btn>
+                            <v-btn color="accent" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
                         </template>
                     </v-snackbar>
                     <!-- end snack bar -->
@@ -376,6 +376,7 @@ export default {
             .then((response) => {
                 this.isLoading = false
                 this.dialogMaps = false
+                this.initialize()
             })
             .catch((error) => {
                 this.isLoading = false

@@ -36,8 +36,8 @@
                             <v-icon class="grey lighten-1" dark>mdi-motorbike</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
-                            <v-list-item-title>Jarak</v-list-item-title>
-                            <v-list-item-subtitle>{{ Number(restaurant.distance).toFixed(2)+' km dari tempat Anda' }}</v-list-item-subtitle>
+                            <v-list-item-title>Jarak | Ongkir</v-list-item-title>
+                            <v-list-item-subtitle>{{ Number(restaurant.distance).toFixed(2) + ' km | Rp' + numberFormat(restaurant.delivery_fee) }}</v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-icon class="my-auto">
                             <v-icon>mdi-chevron-right</v-icon>

@@ -1,21 +1,21 @@
 <template>
     <section>
         <v-app-bar app color="white" light elevate-on-scroll>
-            <v-toolbar-title>Orders</v-toolbar-title>
+            <v-toolbar-title>History</v-toolbar-title>
         </v-app-bar>
         <v-container class="bg-white px-0" style="padding-bottom: 64px;">
             <!-- content -->
-            <v-list v-if="orders.length">
+            <v-list v-if="bonuses.length">
                 <v-list-item-group>
-                    <template v-for="(item, index) in orders">
-                        <v-list-item :key="item.id" dense @click="detail(item)">
+                    <template v-for="(item, index) in bonuses">
+                        <v-list-item :key="item.id" dense>
                             <v-list-item-content>
-                                <v-list-item-title class="subtitle-2 black--text font-weight-regular" v-text="item.user.name +' - '+item.restaurant.name"></v-list-item-title>
+                                <v-list-item-title class="subtitle-2 black--text font-weight-regular" v-text="item.notes"></v-list-item-title>
                                 <v-list-item-subtitle class="caption font-weight-regular" v-text="indoDate(item.created_at, false, true)"></v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>
-                                <v-list-item-action-text class="subtitle-2 black--text font-weight-regular" v-text="numberFormat(item.total)"></v-list-item-action-text>
-                                <v-list-item-action-text class="caption font-weight-bold" :class="statusColor(item.status)" v-text="item.status"></v-list-item-action-text>
+                                <v-list-item-action-text class="subtitle-2 black--text font-weight-regular" v-text="numberFormat(item.amount)"></v-list-item-action-text>
+                                <v-list-item-action-text class="caption font-weight-bold" v-text="item.order.invoice"></v-list-item-action-text>
                             </v-list-item-action>
                         </v-list-item>
                     </template>
@@ -30,7 +30,6 @@
             </v-card>
             <!-- content -->
         </v-container>
-        <DriverOrderDetail :order="orderDetail" :showDialog="showDialog" @closeDialog="close"/>
         <MerchantBottomNav/>
     </section>
 </template>
@@ -47,7 +46,7 @@ export default {
         return {
             isLoading: false,
             showDialog: false,
-            orders: [],
+            bonuses: [],
             orderDetail: {}
         }
     },
@@ -70,8 +69,8 @@ export default {
         async initialize() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/orders`);
-                this.orders = response.data.data
+                const response = await axios.get(`/api/bonuses`);
+                this.bonuses = response.data.data
                 this.isLoading = false
             } catch (error) {
                 this.isLoading = false

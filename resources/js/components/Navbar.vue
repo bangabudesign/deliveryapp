@@ -77,6 +77,25 @@ export default {
                     'title' : 'Users', 'icon' : 'mdi-account-multiple', 'route' : 'AdminUser',
                     'submenu' : []
                 },
+                {
+                    'title' : 'Banks', 'icon' : 'mdi-bank', 'route' : 'AdminBank',
+                    'submenu' : []
+                },
+                {
+                    'title' : 'TRANSACTIONS', 'type' : 'subheader'
+                },
+                {
+                    'title' : 'Transactions', 'icon' : 'mdi-cash', 'route' : 'AdminTransaction',
+                    'submenu' : []
+                },
+                {
+                    'title' : 'Bonuses', 'icon' : 'mdi-cash', 'route' : 'AdminBonus',
+                    'submenu' : []
+                },
+                {
+                    'title' : 'Deposits', 'icon' : 'mdi-wallet', 'route' : 'AdminDeposit',
+                    'submenu' : []
+                },
             ],
         }
     },

@@ -15,6 +15,12 @@ class UserController extends Controller
     {
         $users = User::query()
             ->where('role', 'USER')
+            ->when($request->get('q'), function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%'.$request->get('q').'%');
+            })
+            ->when($request->get('limit'), function ($query) use ($request) {
+                $query->limit($request->get('limit'));
+            })
             ->get();
 
         $response = [

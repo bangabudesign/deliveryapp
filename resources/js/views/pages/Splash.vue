@@ -19,7 +19,7 @@
                     </v-card-text>
                     <v-card-text>
                         <v-btn color="primary" class="rounded-pill mb-4" large block router :to="{name: 'Login'}">Login</v-btn>
-                        <v-btn color="primary" class="rounded-pill" outlined large block router :to="{name: 'Register'}">Register</v-btn>
+                        <v-btn v-if="deferredPrompt" color="success" class="rounded-pill mb-4" outlined large block @click="install">Install Aplikasi <v-icon right>mdi-cloud-download</v-icon></v-btn>
                     </v-card-text>
                 </v-card>
             </v-container>
@@ -31,6 +31,7 @@
 export default {
     data() {
         return {
+            deferredPrompt: null,
             slides: [
                 {
                     id: 1,
@@ -51,6 +52,21 @@ export default {
                     subtitle: "Anterin kamu jalan atau ambilin barang lebih gampang tinggal ngeklik doang."
                 }
             ]
+        }
+    },
+    created() {
+        window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+            // Stash the event so it can be triggered later.
+            this.deferredPrompt = e;
+        });
+        window.addEventListener("appinstalled", () => {
+            this.deferredPrompt = null;
+        });
+    },
+    methods: {
+        async install() {
+            this.deferredPrompt.prompt();
         }
     }
 };

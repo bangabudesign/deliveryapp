@@ -5,7 +5,7 @@
             <v-icon>mdi-home</v-icon>
         </v-btn>
         <v-btn route :to="{ name: 'MerchantOrder' }">
-            <span>Orders</span>
+            <span>History</span>
             <v-icon>mdi-file-document</v-icon>
         </v-btn>
         <v-btn route :to="{ name: 'MerchantProfile' }">

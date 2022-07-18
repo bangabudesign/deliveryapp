@@ -30,10 +30,10 @@
                 <v-card-title>
                     <div>
                         <small class="white--text font-weight-normal">Saldo</small>
-                        <div class="white--text" style="margin-top: -8px;">Rp 200,000</div>
+                        <div class="white--text" style="margin-top: -8px;">Rp {{ user ? numberFormat(user.total_balance) : 0 }}</div>
                     </div>
                     <v-spacer></v-spacer>
-                    <v-btn color="white" class="rounded-pill"><v-icon color="primary" left>mdi-plus-circle</v-icon> Top Up</v-btn>
+                    <v-btn color="white" class="rounded-pill" route :to="{ name: 'DriverDeposit' }"><v-icon color="primary" left>mdi-plus-circle</v-icon> Top Up</v-btn>
                 </v-card-title>
             </v-card>
             <!-- status -->
@@ -78,12 +78,21 @@ export default {
     data() {
         return {
             isLoading: false,
-            status: true,
             locationDisable: false,
+            status: 0,
             user: {},
             defaultUser: {},
             error: {}
         }
+    },
+    
+    watch: {
+        status (val) {
+            val
+            if (val != this.user.is_working) {
+                this.updateStatus()
+            }
+        },
     },
 
     created () {
@@ -96,17 +105,29 @@ export default {
     },
 
     methods: {
+        numberFormat(n = 0, c = 0, d, t) {
+        var c = isNaN(c = Math.abs(c)) ? 2 : c, 
+            d = d == undefined ? "." : d, 
+            t = t == undefined ? "," : t, 
+            s = n < 0 ? "-" : "", 
+            i = parseInt(n = Math.abs(+n || 0).toFixed(c)) + "", 
+            j = (j = i.length) > 3 ? j % 3 : 0;
+            return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+        },
+
         async initialize() {
             this.isLoading = true
             try {
                 const response = await axios.get(`/api/user`);
                 this.user = response.data.data
+                this.status = response.data.data.is_working
                 this.isLoading = false
             } catch (error) {
                 this.isLoading = false
                 this.error = error.response.data
             }
         },
+        
         getLocation() {
             navigator.geolocation.getCurrentPosition(
                 // Success callback
@@ -168,6 +189,19 @@ export default {
             .then((response) => {
                 this.isLoading = false
                 this.dialogMaps = false
+            })
+            .catch((error) => {
+                this.isLoading = false
+                this.error = error.response.data
+            });
+        },
+        updateStatus() {
+            this.isLoading = true
+            var status = this.status ? 1 : 0 ;
+            axios.post('/api/update-status', { is_working : status })
+            .then((response) => {
+                this.user.is_working = status
+                this.isLoading = false
             })
             .catch((error) => {
                 this.isLoading = false
