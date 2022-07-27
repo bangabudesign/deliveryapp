@@ -63,6 +63,10 @@ export default {
                     'submenu' : []
                 },
                 {
+                    'title' : 'Banners', 'icon' : 'mdi-image', 'route' : 'AdminBanner',
+                    'submenu' : []
+                },
+                {
                     'title' : 'Drivers', 'icon' : 'mdi-motorbike', 'route' : 'AdminDriver',
                     'submenu' : [
                         // {'title' : 'All Drivers', 'route' : 'AdminDriver', 'query' : ''},

@@ -27,7 +27,7 @@ class Deposit extends Model
 
     public function getTotalAttribute()
     {
-        return $this->amount + $this->admin_fee;
+        return $this->amount - $this->admin_fee;
     }
 
     public function user()

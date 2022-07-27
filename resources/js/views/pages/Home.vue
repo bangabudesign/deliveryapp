@@ -35,15 +35,15 @@
                 </v-col>
             </v-row>
             <!-- end menu -->
-            <!-- slideshow -->
+            <!-- banner -->
             <v-card flat class="mb-6 rounded-lg">
                 <v-carousel cycle hide-delimiter-background :show-arrows="false" height="auto" light>
-                    <v-carousel-item v-for="slide in slides" :key="slide.id">
-                        <v-img :aspect-ratio="16/9" :src="slide.image" class="rounded-lg"></v-img>
+                    <v-carousel-item v-for="banner in banners" :key="banner.id">
+                        <v-img :aspect-ratio="5/2" :src="banner.image_url" class="rounded-xl"></v-img>
                     </v-carousel-item>
                 </v-carousel>
             </v-card>
-            <!-- end slideshow -->
+            <!-- end banner -->
             <!-- content -->
             <h2 class="text-h6 mb-4">Mau makan apa hari ini?</h2>
             <template v-if="isLoading || restaurants.length == 0">
@@ -131,7 +131,7 @@ export default {
                     label: 'Snack'
                 }
             ],
-            slides: [],
+            banners: [],
             restaurants: [],
             user: {}
         }
@@ -139,7 +139,7 @@ export default {
 
     created () {
         this.initialize()
-        this.getSlides()
+        this.getBanners()
     },
 
     methods: {
@@ -156,11 +156,11 @@ export default {
                 this.error = error.response.data
             }
         },
-        async getSlides() {
+        async getBanners() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/slides`);
-                this.slides = response.data.data
+                const response = await axios.get(`/api/banners?status=active`);
+                this.banners = response.data.data
                 this.isLoading = false
             } catch (error) {
                 this.isLoading = false

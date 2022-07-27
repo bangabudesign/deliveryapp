@@ -30,6 +30,7 @@ import MerchantProfile from './views/pages/MerchantProfile'
 import MerchantRestoForm from './views/pages/MerchantRestoForm'
 // admin component
 import AdminDashboard from './views/pages/AdminDashboard'
+import AdminBanner from './views/pages/AdminBanner'
 import AdminDriver from './views/pages/AdminDriver'
 import AdminMerchant from './views/pages/AdminMerchant'
 import AdminUser from './views/pages/AdminUser'
@@ -170,6 +171,11 @@ const routes = [
                 path: 'dashboard',
                 name: 'AdminDashboard',
                 component: AdminDashboard
+            },
+            {
+                path: 'banners',
+                name: 'AdminBanner',
+                component: AdminBanner
             },
             {
                 path: 'drivers',

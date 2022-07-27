@@ -70,7 +70,7 @@ class User extends Authenticatable
     
     public function getTotalBalanceAttribute()
     {
-        return $this->deposits->where('status', 'SUCCESS')->sum('total') + $this->bonuses->sum('amount');
+        return $this->deposits->where('status', 'SUCCESS')->sum('total') + $this->bonuses->sum('amount') - $this->transactions->sum('amount');
     }
 
     public function getRatingAttribute()
@@ -106,5 +106,10 @@ class User extends Authenticatable
     public function bonuses()
     {
         return $this->hasMany(Bonus::class, 'merchant_id');
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'driver_id');
     }
 }
