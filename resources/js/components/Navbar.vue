@@ -100,6 +100,10 @@ export default {
                     'title' : 'Deposits', 'icon' : 'mdi-wallet', 'route' : 'AdminDeposit',
                     'submenu' : []
                 },
+                {
+                    'title' : 'Withdrwals', 'icon' : 'mdi-arrow-down-bold-circle', 'route' : 'AdminWithdrawal',
+                    'submenu' : []
+                },
             ],
         }
     },

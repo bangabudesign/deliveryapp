@@ -19,8 +19,10 @@
                         <small class="dark--text font-weight-normal">Saldo</small>
                         <div class="dark--text" style="margin-top: -8px;">Rp  {{ user ? numberFormat(user.total_balance) : 0 }}</div>
                     </div>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" class="rounded-pill" route :to="{ name: 'MerchantWithdrawal' }"><v-icon color="white" left>mdi-arrow-down-bold-circle</v-icon>Tarik Tunai</v-btn>
                 </v-card-title>
-                <v-divider></v-divider>
+                <!-- <v-divider></v-divider>
                 <v-card-title>
                     <v-row style="margin-left:-4px; margin-right:-4px;">
                         <v-col cols="6" class="px-1" v-for="menu in menus" :key="menu.id">
@@ -28,7 +30,7 @@
                                 <v-icon color="white" left>{{menu.icon}}</v-icon> {{menu.label}}</v-btn>
                         </v-col>
                     </v-row>
-                </v-card-title>
+                </v-card-title> -->
             </v-card>
             <!-- content -->
             <template v-if="isLoading || restaurants.length == 0">
@@ -87,13 +89,13 @@ export default {
             isLoading: false,
             user: {},
             menus: [
-                // {
-                //     id: 1,
-                //     icon: 'mdi-plus-circle',
-                //     color: '#4CAF50',
-                //     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                //     label: 'Top Up'
-                // },
+                {
+                    id: 1,
+                    icon: 'mdi-plus-circle',
+                    color: '#4CAF50',
+                    icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+                    label: 'Top Up'
+                },
                 {
                     id: 2,
                     icon: 'mdi-arrow-up-bold-circle',

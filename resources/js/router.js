@@ -29,6 +29,7 @@ import MerchantHome from './views/pages/MerchantHome'
 import MerchantOrder from './views/pages/MerchantOrder'
 import MerchantProfile from './views/pages/MerchantProfile'
 import MerchantRestoForm from './views/pages/MerchantRestoForm'
+import MerchantWithdrawal from './views/pages/MerchantWithdrawal'
 // admin component
 import AdminDashboard from './views/pages/AdminDashboard'
 import AdminBanner from './views/pages/AdminBanner'
@@ -36,6 +37,7 @@ import AdminDriver from './views/pages/AdminDriver'
 import AdminMerchant from './views/pages/AdminMerchant'
 import AdminUser from './views/pages/AdminUser'
 import AdminDeposit from './views/pages/AdminDeposit'
+import AdminWithdrawal from './views/pages/AdminWithdrawal'
 import AdminTransaction from './views/pages/AdminTransaction'
 import AdminBonus from './views/pages/AdminBonus'
 import AdminBank from './views/pages/AdminBank'
@@ -162,7 +164,12 @@ const routes = [
                 name: 'MerchantRestoForm',
                 props: true,
                 component: MerchantRestoForm
-            }
+            },
+            {
+                path: 'withdarawal',
+                name: 'MerchantWithdrawal',
+                component: MerchantWithdrawal
+            },
         ]
     },
     {
@@ -203,6 +210,11 @@ const routes = [
                 path: 'deposits',
                 name: 'AdminDeposit',
                 component: AdminDeposit
+            },
+            {
+                path: 'withdrawals',
+                name: 'AdminWithdrawal',
+                component: AdminWithdrawal
             },
             {
                 path: 'transactions',
