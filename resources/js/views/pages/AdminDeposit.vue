@@ -48,6 +48,7 @@
                                     <v-select label="Status" :items="['PENDING', 'SUCCESS', 'CANCEL', 'REJECTED']" v-model="editedItem.status" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.status : ''"></v-select>
                                 </v-col>
                             </v-row>
+                            <v-img v-if="editedItem.receipt" :src="editedItem.receipt_url" class="rounded-lg mt-4"></v-img>
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>

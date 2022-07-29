@@ -42,6 +42,7 @@ export default {
             user: {},
             banks: [],
             editedItem: {
+                id: '',
                 user_id: '',
                 bank_id: '',
                 amount: 50000,
@@ -91,7 +92,7 @@ export default {
             try {
                 const response = await axios.post('/api/deposits', this.editedItem);
                 this.editedItem = response.data.data
-                this.$router.push({ name: 'DriverHome' })
+                this.$router.replace({ name: 'DriverDepositDetail', params: {id: this.editedItem.id} })
             } catch (error) {
                 this.isLoading = false
                 this.error = error.response.data

@@ -85,7 +85,7 @@ class DepositController extends Controller
 
     public function show(Request $request, $id)
     {
-        $deposit = Deposit::query()
+        $deposit = Deposit::query()->with('bank')
                 ->when($request->user()->role != 'ADMIN', function ($query) use ($request) {
                     $query->where('user_id', $request->user()->id);
                 })
@@ -102,6 +102,16 @@ class DepositController extends Controller
 
     public function update($id, Request $request)
     {
+        $deposit = Deposit::findOrFail($id);
+
+        if ($request->user()->id != $deposit->user_id) {
+            $response = [
+                'status' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ];
+            return response()->json($response, Response::HTTP_UNAUTHORIZED);
+        }
+
         $validator = Validator::make($request->all(), [
             'user_id' => 'required:exists,users,id',
             'bank_id' => 'required:exists,banks,id',
@@ -126,8 +136,6 @@ class DepositController extends Controller
             ];
             return response()->json($response, Response::HTTP_BAD_REQUEST);
         }
-
-        $deposit = Deposit::findOrFail($id);
 
         $data = [
             'bank_id' => $request->bank_id,
@@ -155,6 +163,42 @@ class DepositController extends Controller
             'data' => $deposit
         ];
 
+        return response()->json($response, Response::HTTP_OK);
+    }
+
+    public function uploadReceipt(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'nullable|image',
+        ], [
+            'image' => ':attribute harus berupa foto.',
+        ], [
+            'image' => 'Gambar',
+        ]);
+
+        if ($validator->fails()) {
+            $response = [
+                'message' => 'Gagal mengupload bukti transfer.',
+                'errors' => $validator->messages()
+            ];
+            return response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $deposit = Deposit::findOrFail($id);
+
+        $fileName = $deposit->id . time() . '.' . $request->image->extension();
+        $path = public_path('images/receipt');
+
+        $data = [ 'receipt' => $fileName ];
+        $request->image->move($path, $fileName);
+
+        $deposit->update($data);
+        $deposit->bank;
+
+        $response = [
+            'message' => 'Berhasil mengupload bukti transfer.',
+            'data' => $deposit
+        ];
         return response()->json($response, Response::HTTP_OK);
     }
 }

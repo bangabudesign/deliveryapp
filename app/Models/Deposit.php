@@ -23,15 +23,25 @@ class Deposit extends Model
         'confirmed_at' => 'datetime',
     ];
 
-    protected $appends = ['total'];
+    protected $appends = ['total', 'receipt_url'];
 
     public function getTotalAttribute()
     {
         return $this->amount - $this->admin_fee;
     }
 
+    public function getReceiptUrlAttribute()
+    {
+        return '/images/receipt/' . $this->receipt;
+    }
+
     public function user()
     {
          return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function bank()
+    {
+         return $this->belongsTo(Bank::class, 'bank_id');
     }
 }

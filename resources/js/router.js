@@ -23,6 +23,7 @@ import DriverHome from './views/pages/DriverHome'
 import DriverOrder from './views/pages/DriverOrder'
 import DriverProfile from './views/pages/DriverProfile'
 import DriverDeposit from './views/pages/DriverDeposit'
+import DriverDepositDetail from './views/pages/DriverDepositDetail'
 // merchant component
 import MerchantHome from './views/pages/MerchantHome'
 import MerchantOrder from './views/pages/MerchantOrder'
@@ -124,6 +125,12 @@ const routes = [
                 name: 'DriverDeposit',
                 component: DriverDeposit
             },
+            {
+                path: 'deposit/:id',
+                name: 'DriverDepositDetail',
+                props: true,
+                component: DriverDepositDetail
+            }
         ]
     },
     {

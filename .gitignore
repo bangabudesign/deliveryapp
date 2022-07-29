@@ -3,6 +3,7 @@
 /public/storage
 /public/images/media/*
 /public/images/banner/*
+/public/images/receipt/*
 /storage/*.key
 /vendor
 .env
