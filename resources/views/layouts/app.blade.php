@@ -51,7 +51,11 @@
     <script src="https://unpkg.com/esri-leaflet-geocoder@2.3.3/dist/esri-leaflet-geocoder.js"
         integrity="sha512-HrFUyCEtIpxZloTgEKKMq4RFYhxjJkCiF5sDxuAokklOeZ68U2NPfh4MFtyIVWlsKtVbK5GD2/JzFyAfvT5ejA=="
         crossorigin=""></script>
-   
+
+    {{-- route machine --}}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -61,7 +65,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js?new=13') }}" defer></script>
+    <script src="{{ asset('js/app.js?new=14') }}" defer></script>
     <script src="{{ asset('js/register.js') }}" defer></script>
 </body>
 </html>

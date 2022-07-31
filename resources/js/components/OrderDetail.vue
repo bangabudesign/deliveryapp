@@ -218,8 +218,25 @@ export default {
                 
                 L.marker(this.order.restaurant.latlng, {icon: storeIcon}).addTo(map)
                 L.marker(this.order.driver.latlng, {icon: driverIcon}).addTo(map)
-                map.panTo(this.order.latlng)
                 map.setZoom(20)
+
+                L.Routing.control({
+                    show: false,
+                    addWaypoints: false,
+                    waypoints: [
+                        L.latLng(this.order.driver.latlng),
+                        L.latLng(this.order.latlng),
+                    ],
+                    createMarker: function() { return null; },
+                    lineOptions: {
+                        styles: [{color: '#27b83a', opacity: 1, weight: 5}]
+                    }
+                }).addTo(map);
+
+                // realtime get location driver
+                setInterval(() => {
+                    map.panTo(this.order.driver.latlng)
+                }, 2000);
                 
                 // add title layer
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
