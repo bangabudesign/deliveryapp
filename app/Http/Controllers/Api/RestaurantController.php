@@ -118,8 +118,7 @@ class RestaurantController extends Controller
                     * cos(radians(restaurants.lat)) 
                     * cos(radians(restaurants.lng) - radians(" . $lng . ")) 
                     + sin(radians(" .$lat. ")) 
-                    * sin(radians(restaurants.lat))) AS distance"))
-                ->havingRaw('distance < 50');
+                    * sin(radians(restaurants.lat))) AS distance"));
             })
             ->findOrFail($id);
         

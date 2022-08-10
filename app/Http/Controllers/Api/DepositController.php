@@ -104,7 +104,7 @@ class DepositController extends Controller
     {
         $deposit = Deposit::findOrFail($id);
 
-        if ($request->user()->id != $deposit->user_id) {
+        if ($request->user()->role != 'ADMIN') {
             $response = [
                 'status' => Response::HTTP_UNAUTHORIZED,
                 'message' => 'Unauthorized',
@@ -168,6 +168,16 @@ class DepositController extends Controller
 
     public function uploadReceipt(Request $request, $id)
     {
+        $deposit = Deposit::findOrFail($id);
+
+        if ($request->user()->id != $deposit->user_id && $request->user()->role != 'ADMIN') {
+            $response = [
+                'status' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Unauthorized',
+            ];
+            return response()->json($response, Response::HTTP_UNAUTHORIZED);
+        }
+        
         $validator = Validator::make($request->all(), [
             'image' => 'nullable|image',
         ], [
@@ -183,8 +193,6 @@ class DepositController extends Controller
             ];
             return response()->json($response, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-
-        $deposit = Deposit::findOrFail($id);
 
         $fileName = $deposit->id . time() . '.' . $request->image->extension();
         $path = public_path('images/receipt');

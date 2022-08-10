@@ -8,6 +8,7 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Transaction;
 use App\Notifications\DriverOrderCreated;
+use App\Notifications\OrderCanceled;
 use App\Notifications\OrderCreated;
 use App\Notifications\OrderSuccess;
 use App\Notifications\OrderTaken;
@@ -144,6 +145,10 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
         $order->update(['status' => $request->status]);
+
+        if ($order->status == 'CANCELED') {
+            Notification::send($order->user, new OrderCanceled($order));
+        }
 
         if ($order->status == 'TAKEN') {
             Notification::send($order->user, new OrderTaken($order));

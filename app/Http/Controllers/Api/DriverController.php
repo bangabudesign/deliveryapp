@@ -27,6 +27,7 @@ class DriverController extends Controller
             })
             ->when($request->get('is_working'), function ($query) use ($request) {
                 $query->where('is_working', $request->get('is_working'));
+                $query->where('total_balance', '>=', 15000);
                 $query->whereDoesntHave('orders', function (Builder $q) {
                     $q->where('status', 'RECEIVED');
                     $q->orWhere('status', 'TAKEN');

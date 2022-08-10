@@ -9,8 +9,8 @@
                     <v-app-bar-title class="pl-0" v-text="'Order Detail'"></v-app-bar-title>
                 </v-app-bar>
                 <v-container class="px-0 pt-15" v-if="order && order.id">
-                    <div id="map" :class="{'d-none': order.status == 'PAID'}"></div>
-                    <v-stepper alt-labels flat value="step(order.status)">
+                    <div id="map" :class="{'d-none': order.status == 'PAID' || order.status == 'CANCELED'}"></div>
+                    <v-stepper alt-labels flat value="step(order.status)" v-if="order.status != 'CANCELED'">
                         <v-stepper-header>
                             <v-stepper-step :complete="step(order.status) > 1" step="1">
                                 Pesanan Diterima
@@ -29,6 +29,9 @@
                             </v-stepper-step>
                         </v-stepper-header>
                     </v-stepper>
+                    <v-card v-else flat class="pa-10">
+                        <h2 class="text-center font-weight-light">Pesanan Dibatalkan</h2>
+                    </v-card>
                     <v-divider class="mb-6"></v-divider>
                     <v-list subheader two-line>
                         <v-list-item-group>

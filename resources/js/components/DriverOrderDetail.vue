@@ -9,8 +9,8 @@
                     <v-app-bar-title class="pl-0" v-text="'Order Detail'"></v-app-bar-title>
                 </v-app-bar>
                 <v-container class="px-0 pt-15" :class="{'pb-16': order.status != 'PAID'}" v-if="order && order.id">
-                    <div id="map" :class="{'d-none': order.status == 'PAID'}"></div>
-                    <v-stepper alt-labels flat value="step(order.status)">
+                    <div id="map" :class="{'d-none': order.status == 'PAID' || order.status == 'CANCELED'}"></div>
+                    <v-stepper alt-labels flat value="step(order.status)" v-if="order.status != 'CANCELED'">
                         <v-stepper-header>
                             <v-stepper-step :complete="step(order.status) > 1" step="1">
                                 Pesanan Diterima
@@ -29,6 +29,9 @@
                             </v-stepper-step>
                         </v-stepper-header>
                     </v-stepper>
+                    <v-card v-else flat class="pa-10">
+                        <h2 class="text-center font-weight-light">Pesanan Dibatalkan</h2>
+                    </v-card>
                     <v-divider class="mb-6"></v-divider>
                     <v-list subheader two-line>
                         <v-list-item-group>
@@ -93,8 +96,9 @@
                         <div class="subtitle-2 font-weight-bold">Rp{{ numberFormat(order.total) }}</div>
                     </div>
                     
-                    <v-bottom-navigation fixed dark horizontal v-if="order.status != 'PAID'">
-                        <v-btn color="primary" v-if="order.status == 'RECEIVED'" large block @click="updateStatus('TAKEN')">Tandakan Sudah Diambil</v-btn>
+                    <v-bottom-navigation fixed dark horizontal v-if="order.status == 'RECEIVED' || order.status == 'TAKEN'">
+                        <v-btn color="secondary" v-if="order.status == 'RECEIVED'" large width="100%" @click="updateStatus('CANCELED')">Batalkan</v-btn>
+                        <v-btn color="primary" v-if="order.status == 'RECEIVED'" large width="100%" @click="updateStatus('TAKEN')">Sudah Diambil</v-btn>
                         <v-btn color="primary" v-if="order.status == 'TAKEN'" large block @click="updateStatus('PAID')">Tandakan Selesai</v-btn>
                     </v-bottom-navigation>
                     
