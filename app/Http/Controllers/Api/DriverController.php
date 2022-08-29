@@ -27,7 +27,6 @@ class DriverController extends Controller
             })
             ->when($request->get('is_working'), function ($query) use ($request) {
                 $query->where('is_working', $request->get('is_working'));
-                $query->where('total_balance', '>=', 15000);
                 $query->whereDoesntHave('orders', function (Builder $q) {
                     $q->where('status', 'RECEIVED');
                     $q->orWhere('status', 'TAKEN');
@@ -45,6 +44,11 @@ class DriverController extends Controller
                 ->orderBy('distance');
             })
             ->get();
+            
+        
+        if($request->get('is_working')) {
+            $drivers->where('total_balance', '>=', 15000);
+        };
         
 
         $response = [

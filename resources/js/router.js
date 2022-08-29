@@ -13,6 +13,7 @@ import Login from './views/auth/Login'
 import Register from './views/auth/Register'
 // user component
 import Splash from './views/pages/Splash'
+import Comingsoon from './views/pages/Comingsoon'
 import Home from './views/pages/Home'
 import Search from './views/pages/Search'
 import Order from './views/pages/Order'
@@ -48,6 +49,11 @@ const routes = [
         name: 'Splash',
         component: Splash,
         meta: { requiresGuest: true },
+    },
+    {
+        path: '/comingsoon',
+        name: 'Comingsoon',
+        component: Comingsoon,
     },
     {
         path: '/login',

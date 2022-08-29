@@ -25,10 +25,9 @@
             <!-- menu -->
             <v-row class="mb-3">
                 <v-col cols="3" v-for="menu in menus" :key="menu.id">
-                    <v-card class="d-flex flex-column align-center justify-center" flat route :to="{ name: 'Search', query: {category: menu.label.toLowerCase()} }">
+                    <v-card class="d-flex flex-column align-center justify-center" flat route :to="menu.route">
                         <v-avatar>
                             <v-icon :style="{backgroundColor: menu.color}" dark>{{menu.icon}}</v-icon>
-                            <!-- <img :src="menu.icon_url" :alt="menu.label"> -->
                         </v-avatar>
                         <span class="text-center mt-2 caption" v-text="menu.label"></span>
                     </v-card>
@@ -107,28 +106,64 @@ export default {
                     icon: 'mdi-map-marker-radius',
                     color: '#2b7bec',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Disekitar'
+                    label: 'Disekitar',
+                    route: { name: 'Search', query: {category: 'disekitar'} }
                 },
                 {
                     id: 2,
                     icon: 'mdi-rice',
                     color: '#ff6a30',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Makanan'
+                    label: 'Makanan',
+                    route: { name: 'Search', query: {category: 'makanan'} }
                 },
                 {
                     id: 3,
                     icon: 'mdi-glass-mug',
                     color: '#a46dfe',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Minuman'
+                    label: 'Minuman',
+                    route: { name: 'Search', query: {category: 'minuman'} }
                 },
                 {
                     id: 4,
                     icon: 'mdi-food',
                     color: '#93d31b',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
-                    label: 'Snack'
+                    label: 'Snack',
+                    route: { name: 'Search', query: {category: 'snack'} }
+                },
+                {
+                    id: 5,
+                    icon: 'mdi-car',
+                    color: '#e91e63',
+                    icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+                    label: 'Mobil',
+                    route: { name: 'Comingsoon', query: {category: 'disekitar'} }
+                },
+                {
+                    id: 6,
+                    icon: 'mdi-motorbike',
+                    color: '#009688',
+                    icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+                    label: 'Motor',
+                    route: { name: 'Comingsoon', query: {category: 'disekitar'} }
+                },
+                {
+                    id: 7,
+                    icon: 'mdi-lan',
+                    color: '#ff9800',
+                    icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+                    label: 'Network',
+                    route: { name: 'Comingsoon', query: {category: 'disekitar'} }
+                },
+                {
+                    id: 8,
+                    icon: 'mdi-help',
+                    color: '#607d8b',
+                    icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
+                    label: 'Next',
+                    route: { name: 'Comingsoon', query: {category: 'disekitar'} }
                 }
             ],
             banners: [],
