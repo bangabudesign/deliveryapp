@@ -70,7 +70,7 @@ class User extends Authenticatable
     
     public function getTotalBalanceAttribute()
     {
-        return $this->deposits->where('status', 'SUCCESS')->sum('total') + $this->bonuses->sum('amount') - $this->transactions->sum('amount') - $this->withdrawals->where('status', 'SUCCESS')->sum('total');
+        return $this->deposits->where('status', 'SUCCESS')->sum('total') + $this->bonuses->sum('amount') - $this->transactions->sum('amount') - $this->withdrawals->where('status', 'SUCCESS')->sum('amount');
     }
 
     public function getRatingAttribute()

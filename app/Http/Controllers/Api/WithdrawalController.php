@@ -41,7 +41,7 @@ class WithdrawalController extends Controller
             $user = $request->user();
         }
 
-        if ($request->amount + 5000 > $user->total_balance) {
+        if ($request->amount > $user->total_balance) {
             $response = [
                 'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
                 'message' => 'Saldo tidak cukup',

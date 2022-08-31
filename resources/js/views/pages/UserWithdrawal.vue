@@ -89,7 +89,7 @@ export default {
             try {
                 const response = await axios.post('/api/withdrawals', this.editedItem);
                 this.editedItem = response.data.data
-                this.$router.replace({ name: 'MerchantHome' })
+                this.$router.replace({ name: 'Home' })
             } catch (error) {
                 this.isLoading = false
                 this.error = error.response.data

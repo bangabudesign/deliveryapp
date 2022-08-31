@@ -19,6 +19,7 @@ import Search from './views/pages/Search'
 import Order from './views/pages/Order'
 import Profile from './views/pages/Profile'
 import RestoDetail from './views/pages/RestoDetail'
+import UserWithdrawal from './views/pages/UserWithdrawal'
 // driver component
 import DriverHome from './views/pages/DriverHome'
 import DriverOrder from './views/pages/DriverOrder'
@@ -54,6 +55,13 @@ const routes = [
         path: '/comingsoon',
         name: 'Comingsoon',
         component: Comingsoon,
+    },
+    {
+        path: '/network',
+        name: 'Network',
+        beforeEnter(to, from, next) {
+            window.location.href = "https://aplikasiprostore.com/";
+        }
     },
     {
         path: '/login',
@@ -101,7 +109,12 @@ const routes = [
                 name: 'RestoDetail',
                 props: true,
                 component: RestoDetail
-            }
+            },
+            {
+                path: 'withdarawal/user',
+                name: 'UserWithdrawal',
+                component: UserWithdrawal
+            },
         ]
     },
     {
@@ -172,7 +185,7 @@ const routes = [
                 component: MerchantRestoForm
             },
             {
-                path: 'withdarawal',
+                path: 'withdarawal/merchant',
                 name: 'MerchantWithdrawal',
                 component: MerchantWithdrawal
             },
