@@ -56,7 +56,7 @@
                                     <v-list-item-subtitle v-text="'0'+order.user.phone"></v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-icon>
-                                    <v-btn icon color="success" :href="'https://wa.me/62'+order.user.phone" target="_blank">
+                                    <v-btn icon color="success" :href="'https://wa.me/62'+order.user.phone">
                                         <v-icon>mdi-message-text</v-icon>
                                     </v-btn>
                                 </v-list-item-icon>

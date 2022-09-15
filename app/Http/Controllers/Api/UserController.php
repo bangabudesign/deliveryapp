@@ -21,6 +21,9 @@ class UserController extends Controller
             ->when($request->get('limit'), function ($query) use ($request) {
                 $query->limit($request->get('limit'));
             })
+            ->when($request->get('premium'), function ($query) use ($request) {
+                $query->where('is_premium', 1);
+            })
             ->get();
 
         $response = [
@@ -48,16 +51,19 @@ class UserController extends Controller
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
             'password' => 'required|min:8',
+            'is_premium' => 'required|in:0,1',
         ], [
             'required' => ':attribute tidak boleh kosong.',
             'numeric' => ':attribute harus berupa angka.',
             'min' => ':attribute minimal :min karakter.',
+            'in' => ':attribute tidak valid.',
         ], [
             'name' => 'Nama',
             'phone' => 'WhatsApp',
             'lat' => 'Latitude',
             'lng' => 'Longtitude',
             'password' => 'Password',
+            'is_premium' => 'Premium Status',
         ]);
 
         if ($validator->fails()) {
@@ -114,11 +120,13 @@ class UserController extends Controller
             'motor_type' => 'required_if:role,DRIVER',
             'vehicle_number' => 'required_if:role,DRIVER',
             'password' => 'nullable|min:8',
+            'is_premium' => 'required|in:0,1',
         ], [
             'required' => ':attribute tidak boleh kosong.',
             'required_if' => ':attribute tidak boleh kosong jika role adalah :role.',
             'numeric' => ':attribute harus berupa angka.',
             'min' => ':attribute minimal :min karakter.',
+            'in' => ':attribute tidak valid.',
         ], [
             'name' => 'Nama',
             'phone' => 'WhatsApp',
@@ -126,6 +134,7 @@ class UserController extends Controller
             'lng' => 'Longtitude',
             'role' => 'Role',
             'password' => 'Password',
+            'is_premium' => 'Premium Status',
         ]);
 
         if ($validator->fails()) {
@@ -145,6 +154,10 @@ class UserController extends Controller
             'lat' => $request->lat,
             'lng' => $request->lng,
         ];
+
+        if ($request->user()->role == 'ADMIN') {
+            $data['is_premium'] = $request->is_premium;
+        }
 
         if ($request->avatar) {
             $data['avatar'] = $request->avatar;

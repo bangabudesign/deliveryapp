@@ -4,6 +4,10 @@
             <span>Home</span>
             <v-icon>mdi-home</v-icon>
         </v-btn>
+        <v-btn route :to="{ name: 'Comingsoon' }">
+            <span>Ads</span>
+            <v-icon>mdi-bullhorn</v-icon>
+        </v-btn>
         <v-btn route :to="{ name: 'Order' }">
             <span>Orders</span>
             <v-icon>mdi-file-document</v-icon>

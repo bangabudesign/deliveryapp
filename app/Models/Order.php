@@ -39,6 +39,10 @@ class Order extends Model
         return $this->sub_total + $this->delivery_fee + $this->service_fee;
     }
 
+    public function scopePaid($query) {
+        return $query->where('status', 'PAID');
+    }
+
     public function items()
     {
         return $this->hasMany(OrderItem::class);

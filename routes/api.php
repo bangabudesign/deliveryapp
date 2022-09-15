@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\ImageController;
 use App\Http\Controllers\Api\DepositController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\BonusController;
+use App\Http\Controllers\Api\ProfitSharingController;
 use App\Http\Controllers\Api\WithdrawalController;
 
 /*
@@ -89,5 +90,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/deposits/receipt/{id}', [DepositController::class, 'uploadReceipt']);
     Route::resource('/transactions', TransactionController::class)->only('index', 'store', 'update');
     Route::resource('/bonuses', BonusController::class)->only('index', 'store', 'update');
+    Route::resource('/sharings', ProfitSharingController::class)->only('index', 'store', 'update');
+    Route::get('/sharings/stats', [ProfitSharingController::class, 'stats']);
+    Route::post('/sharings/send', [ProfitSharingController::class, 'sendProfit']);
     Route::resource('/banks', BankController::class)->only('index', 'store', 'update');
 });

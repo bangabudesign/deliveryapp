@@ -22,14 +22,14 @@
             <v-card class="mx-auto rounded-pill" flat style="margin-top: -32px;">
                 <v-text-field class="rounded-pill" v-model="searchTerm" placeholder="mau makan apa?" solo prepend-inner-icon="mdi-magnify" @input="inputSearch"></v-text-field>
             </v-card>
-            <v-card flat color="#009688" class="rounded-lg mb-10">
+            <v-card v-if="user.is_premium == 1" flat color="#009688" class="rounded-lg mb-10">
                 <v-card-title>
                     <div>
-                        <small class="white--text font-weight-normal">Profit Share</small>
+                        <small class="white--text font-weight-normal">Profit Claim</small>
                         <div class="white--text" style="margin-top: -8px;">Rp  {{ user ? numberFormat(user.total_balance) : 0 }}</div>
                     </div>
                     <v-spacer></v-spacer>
-                    <v-btn depressed color="white" class="rounded-pill" route :to="{ name: 'UserWithdrawal' }"><v-icon color="primary" left>mdi-arrow-down-bold-circle</v-icon>Tarik Tunai</v-btn>
+                    <v-btn depressed color="white" class="rounded-pill" route :to="{ name: 'UserWithdrawal' }"><v-icon color="primary" left>mdi-arrow-down-bold-circle</v-icon>Tarik</v-btn>
                 </v-card-title>
             </v-card>
             <!-- menu -->

@@ -65,7 +65,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js?new=17') }}" defer></script>
+    <script src="{{ asset('js/app.js?new=9') }}" defer></script>
     <script src="{{ asset('js/register.js') }}" defer></script>
 </body>
 </html>

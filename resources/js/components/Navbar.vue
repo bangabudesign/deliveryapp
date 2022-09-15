@@ -97,6 +97,10 @@ export default {
                     'submenu' : []
                 },
                 {
+                    'title' : 'Profit Sharing', 'icon' : 'mdi-cash', 'route' : 'AdminSharing',
+                    'submenu' : []
+                },
+                {
                     'title' : 'Deposits', 'icon' : 'mdi-wallet', 'route' : 'AdminDeposit',
                     'submenu' : []
                 },

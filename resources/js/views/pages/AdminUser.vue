@@ -43,6 +43,9 @@
                                 </v-col>
                                 </template>
                                 <v-col cols="12">
+                                    <v-select label="Is Premium?" :items="[1,0]" v-model="editedItem.is_premium" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.is_premium : ''"></v-select>
+                                </v-col>
+                                <v-col cols="12">
                                     <v-text-field label="Password" type="password" v-model="editedItem.password" outlined dense hide-details="auto" :error-messages="error.errors ? error.errors.password : ''"></v-text-field>
                                 </v-col>
                             </v-row>
@@ -71,6 +74,11 @@
 
             <v-data-table :headers="headers" :items="users" :search="search" :loading="isLoading">
 
+                <template v-slot:item.premium="{ item }">
+                    <v-btn v-if="item.is_premium" color="success lighten-5 success--text" depressed rounded x-small>Aktif</v-btn>
+                    <v-btn v-else color="error lighten-5 error--text" depressed rounded x-small>Inactive</v-btn>
+                </template>
+
                 <template v-slot:item.actions="{ item }">
                     <v-icon small class="mr-2"  @click="editItem(item)">mdi-pencil</v-icon>
                     <!-- <v-icon small @click="deleteItem(item)">mdi-delete</v-icon> -->
@@ -91,11 +99,12 @@ export default {
             dialogDelete: false,
             search: '',
             rules: [
-                value => !!value || 'Wajib Disi.',
+                value => !!String(value) || 'Wajib Disi.',
             ],
             headers: [
                 { text: 'Nama', align: 'start', value: 'name' },
                 { text: 'WhatsApp', value: 'phone' },
+                { text: 'Premium', value: 'premium' },
                 { text: 'Aksi', value: 'actions', sortable: false },
             ],
             users: [],
@@ -106,6 +115,7 @@ export default {
                 lat: '',
                 lng: '',
                 password: '',
+                is_premium: 0,
             },
             defaultItem: {
                 name: '',
@@ -113,6 +123,7 @@ export default {
                 lat: '',
                 lng: '',
                 password: '',
+                is_premium: 0,
             },
             error: {}
         }

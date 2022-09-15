@@ -35,6 +35,7 @@ class User extends Authenticatable
         'motor_type',
         'vehicle_number',
         'is_working',
+        'is_premium',
     ];
 
     /**
@@ -70,7 +71,7 @@ class User extends Authenticatable
     
     public function getTotalBalanceAttribute()
     {
-        return $this->deposits->where('status', 'SUCCESS')->sum('total') + $this->bonuses->sum('amount') - $this->transactions->sum('amount') - $this->withdrawals->where('status', 'SUCCESS')->sum('amount');
+        return $this->deposits->where('status', 'SUCCESS')->sum('total') + $this->bonuses->sum('amount') + $this->sharings->sum('amount') - $this->transactions->sum('amount') - $this->withdrawals->where('status', 'SUCCESS')->sum('amount');
     }
 
     public function getRatingAttribute()
@@ -83,6 +84,10 @@ class User extends Authenticatable
         return [floatval($this->lat), floatval($this->lng)];
     }
 
+    public function scopePremium($query) {
+        return $query->where('is_premium', 1);
+    }
+
     public function carts()
     {
         return $this->hasMany(Cart::class);
@@ -90,7 +95,7 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->hasMany(Order::class, 'driver_id');
+        return $this->hasMany(Order::class, 'user_id');
     }
 
     public function media()
@@ -106,6 +111,11 @@ class User extends Authenticatable
     public function bonuses()
     {
         return $this->hasMany(Bonus::class, 'merchant_id');
+    }
+
+    public function sharings()
+    {
+        return $this->hasMany(ProfitSharing::class, 'user_id');
     }
 
     public function transactions()

@@ -42,6 +42,7 @@ import AdminDeposit from './views/pages/AdminDeposit'
 import AdminWithdrawal from './views/pages/AdminWithdrawal'
 import AdminTransaction from './views/pages/AdminTransaction'
 import AdminBonus from './views/pages/AdminBonus'
+import AdminSharing from './views/pages/AdminSharing'
 import AdminBank from './views/pages/AdminBank'
 
 const routes = [
@@ -244,6 +245,11 @@ const routes = [
                 path: 'bonuses',
                 name: 'AdminBonus',
                 component: AdminBonus
+            },
+            {
+                path: 'sharings',
+                name: 'AdminSharing',
+                component: AdminSharing
             },
             {
                 path: 'banks',
