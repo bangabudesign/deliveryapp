@@ -2,7 +2,6 @@ require('./bootstrap');
 import Vuetify from 'vuetify';
 import 'vuetify/dist/vuetify.min.css';
 import Cookies from 'js-cookie';
-
 Vue.use(Vuetify)
 
 const opts = {
@@ -31,6 +30,12 @@ window.Vue = require('vue').default;
 
 import Vue from 'vue';
 import router from './router.js';
+
+import Ads from 'vue-google-adsense'
+Vue.use(require('vue-script2'))
+Vue.use(Ads.Adsense)
+Vue.use(Ads.InArticleAdsense)
+Vue.use(Ads.InFeedAdsense)
 
 function loggedIn(){
     axios.defaults.headers.common['Authorization'] = 'Bearer ' +Cookies.get('token');

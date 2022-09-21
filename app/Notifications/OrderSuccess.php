@@ -63,7 +63,7 @@ class OrderSuccess extends Notification
                 ->templateName('customer_order_success')
                 ->default($this->order->invoice)
                 ->default($this->order->driver->name)
-                ->default(strval('62'.$this->order->driver->phone))
+                ->default(strval('https://wa.me/62'.$this->order->driver->phone))
                 ->default($this->order->restaurant->name)
                 ->default($this->order->restaurant->address)
                 ->default(strval('Rp'.number_format($this->order->total)));

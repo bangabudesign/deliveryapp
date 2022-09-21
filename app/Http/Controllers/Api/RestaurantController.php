@@ -34,7 +34,7 @@ class RestaurantController extends Controller
                     * cos(radians(restaurants.lng) - radians(" . $lng . ")) 
                     + sin(radians(" .$lat. ")) 
                     * sin(radians(restaurants.lat))) AS distance"))
-                ->havingRaw('distance < 5')
+                ->havingRaw('distance < 20')
                 ->orderBy('distance');
             })
             ->get();

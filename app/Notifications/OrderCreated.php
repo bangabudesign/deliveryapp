@@ -66,7 +66,7 @@ class OrderCreated extends Notification
                 ->default($this->order->restaurant->name)
                 ->default(strval('Rp'.number_format($this->order->total)))
                 ->default($this->order->driver->name)
-                ->default(strval('62'.$this->order->driver->phone));
+                ->default(strval('https://wa.me/62'.$this->order->driver->phone));
     }
 
     /**

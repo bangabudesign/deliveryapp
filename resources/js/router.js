@@ -14,6 +14,7 @@ import Register from './views/auth/Register'
 // user component
 import Splash from './views/pages/Splash'
 import Comingsoon from './views/pages/Comingsoon'
+import Ads from './views/pages/Ads'
 import Home from './views/pages/Home'
 import Search from './views/pages/Search'
 import Order from './views/pages/Order'
@@ -56,6 +57,11 @@ const routes = [
         path: '/comingsoon',
         name: 'Comingsoon',
         component: Comingsoon,
+    },
+    {
+        path: '/ads',
+        name: 'Ads',
+        component: Ads,
     },
     {
         path: '/network',

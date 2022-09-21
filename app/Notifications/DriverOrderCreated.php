@@ -60,11 +60,13 @@ class DriverOrderCreated extends Notification
     public function toWhatsApp($notifiable)
     {
         return (new WhatsAppTemplate)
-                ->templateName('driver_order_created')
+                ->templateName('driver_order_created_001')
                 ->default($this->order->driver->name)
                 ->default($this->order->user->name)
-                ->default(strval('62'.$this->order->user->phone))
-                ->default($this->order->invoice);
+                ->default(strval('https://wa.me/62'.$this->order->user->phone))
+                ->default($this->order->invoice)
+                ->default($this->order->restaurant->name)
+                ->default(strval('Rp'.number_format($this->order->total)));
     }
 
     /**

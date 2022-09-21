@@ -94,9 +94,6 @@ class OrderController extends Controller
         $order = Order::create($data);
         $order->save();
 
-        Notification::send($order->user, new OrderCreated($order));
-        Notification::send($order->driver, new DriverOrderCreated($order));
-
         $cartItem = Cart::where('user_id', $request->user()->id)
                         ->where('restaurant_id', $request->restaurant_id)
                         ->get();
@@ -113,6 +110,9 @@ class OrderController extends Controller
             $order->items()->create($item);
             $cart->delete();
         }
+
+        Notification::send($order->user, new OrderCreated($order));
+        Notification::send($order->driver, new DriverOrderCreated($order));
 
         $response = [
             'status' => Response::HTTP_OK,
