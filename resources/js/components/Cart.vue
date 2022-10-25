@@ -388,11 +388,15 @@ export default {
             this.isLoading = true
             try {
                 const response = await axios.post(`/api/orders`, {
+                    type: 'FOOD',
                     driver_id : this.selectedDriver.id,
                     restaurant_id : this.restaurant.id,
-                    lat : this.user.lat,
-                    lng : this.user.lng,
-                    delivery_address : this.user.address,
+                    origin_lat : this.restaurant.lat,
+                    origin_lng : this.restaurant.lng,
+                    origin_address : this.restaurant.address,
+                    destination_lat : this.user.lat,
+                    destination_lng : this.user.lng,
+                    destination_address : this.user.address,
                     delivery_fee : this.summary.delivery_fee,
                     service_fee : this.summary.service_fee,
                 });

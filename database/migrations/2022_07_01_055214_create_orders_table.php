@@ -24,13 +24,18 @@ class CreateOrdersTable extends Migration
                 ->references('id')->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->string('type'); //FOOD,BIKE
             $table->foreignId('restaurant_id')
+                ->nullable()
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->decimal('lat', 10,8)->nullable();
-            $table->decimal('lng', 11,8)->nullable();
-            $table->longText('delivery_address')->nullable();
+            $table->decimal('origin_lat', 10,8)->nullable();
+            $table->decimal('origin_lng', 11,8)->nullable();
+            $table->longText('origin_address')->nullable();
+            $table->decimal('destination_lat', 10,8)->nullable();
+            $table->decimal('destination_lng', 11,8)->nullable();
+            $table->longText('destination_address')->nullable();
             $table->bigInteger('delivery_fee')->default(0);
             $table->bigInteger('service_fee')->default(0);
             $table->string('status')->default('RECEIVED');

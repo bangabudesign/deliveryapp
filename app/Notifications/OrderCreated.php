@@ -59,7 +59,8 @@ class OrderCreated extends Notification
      */
     public function toWhatsApp($notifiable)
     {
-        return (new WhatsAppTemplate)
+        if ($this->order->type == 'FOOD') {
+            return (new WhatsAppTemplate)
                 ->templateName('customer_order_created')
                 ->default($this->order->user->name)
                 ->default($this->order->invoice)
@@ -67,6 +68,11 @@ class OrderCreated extends Notification
                 ->default(strval('Rp'.number_format($this->order->total)))
                 ->default($this->order->driver->name)
                 ->default(strval('https://wa.me/62'.$this->order->driver->phone));
+        } else {
+            return (new WhatsAppTemplate)
+                ->templateName('no_template')
+                ->default(strval('Rp'.number_format($this->order->total)));
+        }
     }
 
     /**

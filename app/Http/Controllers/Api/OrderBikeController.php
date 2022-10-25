@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bonus;
-use App\Models\Cart;
-use App\Models\Order;
+use App\Models\OrderBike;
 use App\Models\Transaction;
 use App\Notifications\DriverOrderCreated;
 use App\Notifications\OrderCanceled;
@@ -17,12 +16,12 @@ use Illuminate\Support\Facades\Notification;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Validator;
 
-class OrderController extends Controller
+class OrderBikeController extends Controller
 {
 
     public function index(Request $request)
     {
-        $orders = Order::with('user', 'driver', 'restaurant')
+        $orders = OrderBike::with('user', 'driver')
             ->when($request->user()->role == 'DRIVER', function ($query) use ($request) {
                 $query->where('driver_id', $request->user()->id);
             })
@@ -41,25 +40,10 @@ class OrderController extends Controller
         return response()->json($response, Response::HTTP_OK);
     }
 
-    public function show(Request $request, $id)
-    {
-        $order = Order::with(['restaurant', 'driver', 'user'])->findOrFail($id);
-
-        $response = [
-            'status' => Response::HTTP_OK,
-            'message' => 'Menampilkan data pesanan',
-            'data' => $order,
-        ];
-
-        return response()->json($response, Response::HTTP_OK);
-    }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'type' => 'required|in:FOOD,BIKE',
             'driver_id' => 'required|exists:users,id',
-            'restaurant_id' => 'required_if:type,FOOD|exists:restaurants,id',
             'origin_lat' => 'required|numeric',
             'origin_lng' => 'required|numeric',
             'origin_address' => 'required',
@@ -70,15 +54,11 @@ class OrderController extends Controller
             'service_fee' => 'required|numeric|min:1',
         ], [
             'required' => ':attribute tidak boleh kosong.',
-            'required_if' => ':attribute tidak boleh kosong.',
             'numeric' => ':attribute harus berupa angka.',
             'min' => ':attribute minimal :min',
-            'in' => ':attribute hanya boleh berisi :min',
             'exists' => ':attribute tidak terdaftar'
         ], [
-            'type' => 'Tipe Order',
             'driver_id' => 'Driver',
-            'restaurant_id' => 'Restaurant',
             'origin_lat' => 'Titik Jemput',
             'origin_lng' => 'Titik Jemput',
             'origin_address' => 'Alamat Penjemputan',
@@ -105,7 +85,6 @@ class OrderController extends Controller
         $data = [
             'invoice' => $invoice,
             'user_id' => $request->user()->id,
-            'type' => $request->type,
             'driver_id' => $request->driver_id,
             'origin_lat' => $request->origin_lat,
             'origin_lng' => $request->origin_lng,
@@ -117,34 +96,11 @@ class OrderController extends Controller
             'service_fee' => $request->service_fee,
         ];
 
-        if ($request->type == 'FOOD') {
-            $data['restaurant_id'] = $request->restaurant_id;
-        }
-
-        $order = Order::create($data);
+        $order = OrderBike::create($data);
         $order->save();
 
-        if ($order->type == 'FOOD') {
-            $cartItem = Cart::where('user_id', $request->user()->id)
-                        ->where('restaurant_id', $request->restaurant_id)
-                        ->get();
-        
-            foreach ($cartItem as $cart) {
-                $item = [
-                    'product_id' => $cart->product_id,
-                    'name' => $cart->name,
-                    'price' => $cart->price,
-                    'qty' => $cart->qty,
-                    'note' => $cart->note,
-                ];
-
-                $order->items()->create($item);
-                $cart->delete();
-            }
-        }
-
-        Notification::send($order->user, new OrderCreated($order));
-        Notification::send($order->driver, new DriverOrderCreated($order));
+        //Notification::send($order->user, new OrderCreated($order));
+        //Notification::send($order->driver, new DriverOrderCreated($order));
 
         $response = [
             'status' => Response::HTTP_OK,
@@ -174,7 +130,7 @@ class OrderController extends Controller
             return response()->json($response, Response::HTTP_BAD_REQUEST);
         }
 
-        $order = Order::findOrFail($id);
+        $order = OrderBike::findOrFail($id);
 
         $order->update(['status' => $request->status]);
 
@@ -186,37 +142,35 @@ class OrderController extends Controller
             Notification::send($order->user, new OrderTaken($order));
         }
 
-        if ($order->status == 'PAID') {
-            Notification::send($order->user, new OrderSuccess($order));
-            $delivery_fee = ($order->delivery_fee / 100) * 10;
-            // Transaction::create([
-            //     'order_id' => $order->id,
-            //     'driver_id' => $order->driver_id,
-            //     'amount' => $delivery_fee,
-            //     'notes' => 'Potongan ongkir 10%',
-            // ]);
-            $service_fee = $order->service_fee;
-            Transaction::create([
-                'order_id' => $order->id,
-                'driver_id' => $order->driver_id,
-                'amount' => $service_fee,
-                'notes' => 'Service fee 50%',
-            ]);
-            // Bonus::create([
-            //     'order_id' => $order->id,
-            //     'merchant_id' => $order->restaurant->merchant_id,
-            //     'amount' => $delivery_fee / 2,
-            //     'notes' => 'Delivery fee 50%',
-            // ]);
-            if ($order->type == 'FOOD') {
-                Bonus::create([
-                    'order_id' => $order->id,
-                    'merchant_id' => $order->restaurant->merchant_id,
-                    'amount' => $service_fee / 2,
-                    'notes' => 'Service fee 50%',
-                ]);
-            }
-        }
+        // if ($order->status == 'PAID') {
+        //     Notification::send($order->user, new OrderSuccess($order));
+        //     $delivery_fee = ($order->delivery_fee / 100) * 10;
+        //     Transaction::create([
+        //         'order_id' => $order->id,
+        //         'driver_id' => $order->driver_id,
+        //         'amount' => $delivery_fee,
+        //         'notes' => 'Potongan ongkir 10%',
+        //     ]);
+        //     $service_fee = $order->service_fee;
+        //     Transaction::create([
+        //         'order_id' => $order->id,
+        //         'driver_id' => $order->driver_id,
+        //         'amount' => $service_fee,
+        //         'notes' => 'Service fee 50%',
+        //     ]);
+        //     Bonus::create([
+        //         'order_id' => $order->id,
+        //         'merchant_id' => $order->restaurant->merchant_id,
+        //         'amount' => $delivery_fee / 2,
+        //         'notes' => 'Delivery fee 50%',
+        //     ]);
+        //     Bonus::create([
+        //         'order_id' => $order->id,
+        //         'merchant_id' => $order->restaurant->merchant_id,
+        //         'amount' => $service_fee / 2,
+        //         'notes' => 'Service fee 50%',
+        //     ]);
+        // }
 
         $response = [
             'status' => Response::HTTP_OK,

@@ -8,9 +8,9 @@
             <v-list v-if="orders.length">
                 <v-list-item-group>
                     <template v-for="(item, index) in orders">
-                        <v-list-item :key="item.id" dense @click="detail(item)">
+                        <v-list-item :key="index" dense  route :to="{ name: 'DriverOrderDetail', params: {id: item.id} }">
                             <v-list-item-content>
-                                <v-list-item-title class="subtitle-2 black--text font-weight-regular" v-text="item.user.name +' - '+item.restaurant.name"></v-list-item-title>
+                                <v-list-item-title class="subtitle-2 black--text font-weight-regular" v-text="item.restaurant ? 'Food - '+item.restaurant.name : 'Motor - '+item.destination_address"></v-list-item-title>
                                 <v-list-item-subtitle class="caption font-weight-regular" v-text="indoDate(item.created_at, false, true)"></v-list-item-subtitle>
                             </v-list-item-content>
                             <v-list-item-action>

@@ -58,6 +58,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1391749186489077"
+     crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="app">
@@ -65,7 +67,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js?new=9.21') }}" defer></script>
+    <script src="{{ asset('js/app.js?new=11') }}" defer></script>
     <script src="{{ asset('js/register.js') }}" defer></script>
 </body>
 </html>

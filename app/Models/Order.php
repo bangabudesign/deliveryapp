@@ -13,25 +13,38 @@ class Order extends Model
         'invoice',
         'user_id',
         'driver_id',
+        'type', //FOOD,BIKE
         'restaurant_id',
-        'lat',
-        'lng',
-        'delivery_address',
+        'origin_lat',
+        'origin_lng',
+        'origin_address',
+        'destination_lat',
+        'destination_lng',
+        'destination_address',
         'delivery_fee',
         'service_fee',
         'status', //RECEIVED, TAKEN, PAID, CANCELED
     ];
 
-    protected $appends = ['latlng', 'sub_total', 'total'];
+    protected $appends = ['origin', 'destination', 'sub_total', 'total'];
 
-    public function getLatLngAttribute()
+    public function getOriginAttribute()
     {
-        return [floatval($this->lat), floatval($this->lng)];
+        return [floatval($this->origin_lat), floatval($this->origin_lng)];
+    }
+
+    public function getDestinationAttribute()
+    {
+        return [floatval($this->destination_lat), floatval($this->destination_lng)];
     }
 
     public function getSubTotalAttribute()
     {
-        return $this->items->sum('sub_total');
+        if ($this->items) {
+            return $this->items->sum('sub_total');
+        } else {
+            return 0;
+        }
     }
 
     public function getTotalAttribute()

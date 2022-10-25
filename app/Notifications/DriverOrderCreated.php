@@ -59,14 +59,20 @@ class DriverOrderCreated extends Notification
      */
     public function toWhatsApp($notifiable)
     {
-        return (new WhatsAppTemplate)
-                ->templateName('driver_order_created_001')
-                ->default($this->order->driver->name)
-                ->default($this->order->user->name)
-                ->default(strval('https://wa.me/62'.$this->order->user->phone))
-                ->default($this->order->invoice)
-                ->default($this->order->restaurant->name)
+        if ($this->order->type == 'FOOD') {
+            return (new WhatsAppTemplate)
+                    ->templateName('driver_order_created_001')
+                    ->default($this->order->driver->name)
+                    ->default($this->order->user->name)
+                    ->default(strval('https://wa.me/62'.$this->order->user->phone))
+                    ->default($this->order->invoice)
+                    ->default($this->order->restaurant->name)
+                    ->default(strval('Rp'.number_format($this->order->total)));
+        } else {
+            return (new WhatsAppTemplate)
+                ->templateName('no_template')
                 ->default(strval('Rp'.number_format($this->order->total)));
+        }
     }
 
     /**

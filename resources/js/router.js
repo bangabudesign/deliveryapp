@@ -18,12 +18,15 @@ import Ads from './views/pages/Ads'
 import Home from './views/pages/Home'
 import Search from './views/pages/Search'
 import Order from './views/pages/Order'
+import OrderBikeForm from './views/pages/OrderBikeForm'
+import OrderDetail from './views/pages/OrderDetail'
 import Profile from './views/pages/Profile'
 import RestoDetail from './views/pages/RestoDetail'
 import UserWithdrawal from './views/pages/UserWithdrawal'
 // driver component
 import DriverHome from './views/pages/DriverHome'
 import DriverOrder from './views/pages/DriverOrder'
+import DriverOrderDetail from './views/pages/DriverOrderDetail'
 import DriverProfile from './views/pages/DriverProfile'
 import DriverDeposit from './views/pages/DriverDeposit'
 import DriverDepositDetail from './views/pages/DriverDepositDetail'
@@ -107,6 +110,17 @@ const routes = [
                 component: Order
             },
             {
+                path: 'order-bike',
+                name: 'OrderBikeForm',
+                component: OrderBikeForm
+            },
+            {
+                path: 'order/:id',
+                name: 'OrderDetail',
+                props: true,
+                component: OrderDetail
+            },
+            {
                 path: 'profile',
                 name: 'Profile',
                 component: Profile
@@ -142,6 +156,12 @@ const routes = [
                 path: 'order',
                 name: 'DriverOrder',
                 component: DriverOrder
+            },
+            {
+                path: 'order/:id',
+                name: 'DriverOrderDetail',
+                props: true,
+                component: DriverOrderDetail
             },
             {
                 path: 'profile',
