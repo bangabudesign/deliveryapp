@@ -67,7 +67,7 @@
             <!-- dalog map -->
             <v-dialog v-model="dialogMaps" persistent max-width="500">
                 <v-card>
-                    <v-card-title class="text-h5">Titik Jemput</v-card-title>
+                    <v-card-title class="text-h5">{{ modalTitle }}</v-card-title>
                     <v-card-text style="position: relative">
                         <div v-if="isLoading" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; display: flex;justify-content: center;align-items: center;">
                             <v-card class="text-center" width="200" max-width="200">
@@ -194,6 +194,12 @@ export default {
             },
             error: {}
         }
+    },
+
+    computed: {
+        modalTitle () {
+            return this.map.type == 'origin' ? 'Jemput Dimana?' : 'Mau Kemana?'
+        },
     },
 
     created() {
