@@ -3,7 +3,7 @@ namespace App\Helpers;
 
 class Delivery {
     
-    public static function getFee($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $earthRadius = 6371) {
+    public static function getFee($latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo, $type = 'BIKE', $earthRadius = 6371) {
         // convert from degrees to radians
         $latFrom = deg2rad($latitudeFrom);
         $lngFrom = deg2rad($longitudeFrom);
@@ -16,8 +16,9 @@ class Delivery {
         $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lngDelta / 2), 2)));
         $distance = round($angle * $earthRadius);
 
+        $firstPriceByType = $type == 'CAR' ? 15000 : 10000;
 
-        $price_1 = ($distance > 0) ? 10000 : 10000; $distance =  ($distance > 0)? $distance - 1 :  0;
+        $price_1 = ($distance > 0) ? $firstPriceByType : $firstPriceByType; $distance =  ($distance > 0)? $distance - 1 :  0;
         $price_2 = ($distance - 1) > 0 ? 5000 : ($distance * 5000); $distance = ($distance-1)>0 ? $distance - 1 : 0;
         $price_3 = ($distance > 0) ? ($distance * 2000) : 0;
 

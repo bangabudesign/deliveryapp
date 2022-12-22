@@ -18,7 +18,7 @@ import Ads from './views/pages/Ads'
 import Home from './views/pages/Home'
 import Search from './views/pages/Search'
 import Order from './views/pages/Order'
-import OrderBikeForm from './views/pages/OrderBikeForm'
+import OrderTransport from './views/pages/OrderTransport'
 import OrderDetail from './views/pages/OrderDetail'
 import Profile from './views/pages/Profile'
 import RestoDetail from './views/pages/RestoDetail'
@@ -110,9 +110,9 @@ const routes = [
                 component: Order
             },
             {
-                path: 'order-bike',
-                name: 'OrderBikeForm',
-                component: OrderBikeForm
+                path: 'order-transport',
+                name: 'OrderTransport',
+                component: OrderTransport
             },
             {
                 path: 'order/:id',

@@ -32,6 +32,9 @@ class DriverController extends Controller
                     $q->orWhere('status', 'TAKEN');
                 });
             })
+            ->when($request->get('driver_type'), function ($query) use ($request) {
+                $query->where('driver_type', $request->get('driver_type'));
+            })
             ->when($request->get('near_by'), function ($query) use ($lat, $lng) {
                 $query->select(
                     "*",
@@ -73,6 +76,7 @@ class DriverController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'phone' => 'required|numeric|unique:users,phone',
+            'driver_type' => 'required',
             'motor_type' => 'required',
             'vehicle_number' => 'required',
             'lat' => 'required|numeric',
@@ -86,7 +90,8 @@ class DriverController extends Controller
         ], [
             'name' => 'Nama',
             'phone' => 'WhatsApp',
-            'motor_type' => 'Motor Type',
+            'driver_type' => 'Tipe Driver',
+            'motor_type' => 'Tipe Driver',
             'vehicle_number' => 'No Polisi',
             'lat' => 'Latitude',
             'lng' => 'Longtitude',
@@ -105,6 +110,7 @@ class DriverController extends Controller
         $data = [
             'name' => $request->name,
             'phone' => $request->phone,
+            'driver_type' => $request->driver_type,
             'motor_type' => $request->motor_type,
             'vehicle_number' => $request->vehicle_number,
             'lat' => $request->lat,
@@ -144,6 +150,7 @@ class DriverController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'phone' => 'required|numeric',
+            'driver_type' => 'required',
             'motor_type' => 'required',
             'vehicle_number' => 'required',
             'lat' => 'required|numeric',
@@ -156,7 +163,8 @@ class DriverController extends Controller
         ], [
             'name' => 'Nama',
             'phone' => 'WhatsApp',
-            'motor_type' => 'Motor Type',
+            'driver_type' => 'Tipe Driver',
+            'motor_type' => 'Tipe Motor',
             'vehicle_number' => 'No Polisi',
             'lat' => 'Latitude',
             'lng' => 'Longtitude',
@@ -177,6 +185,7 @@ class DriverController extends Controller
         $data = [
             'name' => $request->name,
             'phone' => $request->phone,
+            'driver_type' => $request->driver_type,
             'motor_type' => $request->motor_type,
             'vehicle_number' => $request->vehicle_number,
             'lat' => $request->lat,

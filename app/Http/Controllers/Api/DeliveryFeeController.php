@@ -11,7 +11,7 @@ class DeliveryFeeController extends Controller
 {
     public function fees(Request $request)
     {
-        $delivery_fee = Delivery::getFee($request->origin_lat, $request->origin_lng, $request->destination_lat, $request->destination_lng);
+        $delivery_fee = Delivery::getFee($request->origin_lat, $request->origin_lng, $request->destination_lat, $request->destination_lng, $request->type);
         
         $data = [
             'delivery_fee' => $delivery_fee,

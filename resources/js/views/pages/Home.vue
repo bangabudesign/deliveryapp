@@ -148,15 +148,15 @@ export default {
                     color: '#009688',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
                     label: 'Motor',
-                    route: { name: 'OrderBikeForm' }
+                    route: { name: 'OrderTransport', query: {type: 'bike'} }
                 },
                 {
                     id: 6,
-                    icon: 'mdi-car',
+                    icon: 'mdi-car-hatchback',
                     color: '#e91e63',
                     icon_url: 'https://cdn.vuetifyjs.com/images/cards/cooking.png',
                     label: 'Mobil',
-                    route: { name: 'Comingsoon', query: {category: 'disekitar'} }
+                    route: { name: 'OrderTransport', query: {type: 'car'} }
                 },
                 // {
                 //     id: 7,

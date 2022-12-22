@@ -4,7 +4,7 @@
             <v-btn icon @click="goBack">
                 <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
-            <v-app-bar-title class="pl-0" v-text="'Kendaraan Roda Dua'"></v-app-bar-title>
+            <v-app-bar-title class="pl-0" v-text="'Transportasi'"></v-app-bar-title>
         </v-app-bar>
         <v-container class="bg-white">
             <v-list subheader two-line>
@@ -36,7 +36,7 @@
                     <v-list-item color="primary" class="px-3" dense @click="dialogDriver = true">
                         <v-list-item-avatar>
                             <img v-if="selectedDriver.avatar" :src="selectedDriver.avatar_url" :alt="selectedDriver.name">
-                            <v-icon v-else color="white" class="tertiary lighten-1" dark>mdi-motorbike</v-icon>
+                            <v-icon v-else color="white" class="tertiary lighten-1" dark>{{ transportIcon }}</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title v-text="selectedDriver.name"></v-list-item-title>
@@ -200,6 +200,28 @@ export default {
         modalTitle () {
             return this.map.type == 'origin' ? 'Jemput Dimana?' : 'Mau Kemana?'
         },
+        transportType () {
+            switch (this.$route.query.type) {
+                case 'car':
+                    return 'CAR'
+                    break;
+            
+                default:
+                    return 'BIKE'
+                    break;
+            }
+        },
+        transportIcon () {
+            switch (this.$route.query.type) {
+                case 'car':
+                    return 'mdi-car-hatchback'
+                    break;
+            
+                default:
+                    return 'mdi-motorbike'
+                    break;
+            }
+        }
     },
 
     created() {
@@ -364,7 +386,7 @@ export default {
         updateLocation(type) {
             this.isLoading = true
             if(type == 'origin') {
-                console.log(this.map)
+                //console.log(this.map)
                 Object.assign(this.data, {
                     origin_lat: this.map.lat,
                     origin_lng: this.map.lng,
@@ -387,7 +409,7 @@ export default {
         async getDriver() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/drivers?near_by=${this.data.origin_lat},${this.data.origin_lng}&limit=5&is_working=1`);
+                const response = await axios.get(`/api/drivers?driver_type=${this.transportType}&near_by=${this.data.origin_lat},${this.data.origin_lng}&limit=5&is_working=1`);
                 this.drivers = response.data.data
                 this.isLoading = false
             } catch (error) {
@@ -397,12 +419,13 @@ export default {
         },
         async getDeliveryFee() {
             this.isLoading = true
+            this.data.type = this.transportType
             if(this.data.origin_lat && this.data.origin_lng) {
                 try {
                     const response = await axios.post(`/api/delivery-fee`, this.data);
                     this.summary = response.data.data
                     Object.assign(this.data, this.summary)
-                    console.log(response.data.data)
+                    //console.log(response.data.data)
                     this.isLoading = false
                 } catch (error) {
                     this.isLoading = false

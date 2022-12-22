@@ -23,7 +23,10 @@
                                     <v-text-field label="WhasApp" type="number" v-model="editedItem.phone" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.phone : ''"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-text-field label="Motor Type" v-model="editedItem.motor_type" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.motor_type : ''"></v-text-field>
+                                    <v-select label="Tipe Driver" :items="['BIKE','CAR']" v-model="editedItem.driver_type" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.driver_type : ''"></v-select>
+                                </v-col>
+                                <v-col cols="12">
+                                    <v-text-field :label="editedItem.driver_type == 'CAR' ? 'Tipe Mobil' : 'Tipe Motor'" v-model="editedItem.motor_type" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.motor_type : ''"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
                                     <v-text-field label="No Polisi" v-model="editedItem.vehicle_number" outlined dense hide-details="auto" :rules="rules" :error-messages="error.errors ? error.errors.vehicle_number : ''"></v-text-field>
@@ -91,7 +94,8 @@ export default {
             headers: [
                 { text: 'Nama', align: 'start', value: 'name' },
                 { text: 'WhatsApp', value: 'phone' },
-                { text: 'Motor Type', value: 'motor_type' },
+                { text: 'Tipe Driver', value: 'driver_type' },
+                { text: 'Tipe Motor/Mobil', value: 'motor_type' },
                 { text: 'No. Polisi', value: 'vehicle_number' },
                 { text: 'Status', value: 'is_working' },
                 { text: 'Aksi', value: 'actions', sortable: false },
@@ -106,6 +110,7 @@ export default {
                 lat: '',
                 lng: '',
                 password: '',
+                driver_type: ''
             },
             defaultItem: {
                 name: '',
@@ -115,6 +120,7 @@ export default {
                 lat: '',
                 lng: '',
                 password: '',
+                driver_type: ''
             },
             error: {}
         }

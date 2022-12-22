@@ -256,7 +256,7 @@ export default {
         async getDriver() {
             this.isLoading = true
             try {
-                const response = await axios.get(`/api/drivers?near_by=${this.restaurant.lat},${this.restaurant.lng}&limit=5&is_working=1`);
+                const response = await axios.get(`/api/drivers?driver_type=BIKE&near_by=${this.restaurant.lat},${this.restaurant.lng}&limit=5&is_working=1`);
                 this.drivers = response.data.data
                 this.isLoading = false
             } catch (error) {

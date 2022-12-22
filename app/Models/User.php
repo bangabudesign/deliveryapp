@@ -35,6 +35,7 @@ class User extends Authenticatable
         'motor_type',
         'vehicle_number',
         'is_working',
+        'driver_type',
         'is_premium',
     ];
 
@@ -86,6 +87,14 @@ class User extends Authenticatable
 
     public function scopePremium($query) {
         return $query->where('is_premium', 1);
+    }
+
+    public function scopeBikeDriver($query) {
+        return $query->where('driver_type', 'BIKE');
+    }
+
+    public function scopeCarDriver($query) {
+        return $query->where('driver_type', 'CAR');
     }
 
     public function carts()
