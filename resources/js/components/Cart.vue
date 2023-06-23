@@ -83,8 +83,13 @@
                     <v-dialog v-model="dialogMaps" persistent max-width="500">
                         <v-card>
                             <v-card-title class="text-h5">Edit Lokasi</v-card-title>
+                            <v-card-text class="pb-2">
+                                <v-form @submit.prevent="findLocation">
+                                    <v-text-field label="Cari Lokasi" append-icon="mdi-magnify" v-model="search" type="search" outlined dense hide-details="auto" :error-messages="error.errors ? error.errors.search : ''" @click:append="findLocation"></v-text-field>
+                                </v-form>
+                            </v-card-text>
                             <v-card-text style="position: relative">
-                                <div v-if="isLoading" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; display: flex;justify-content: center;align-items: center;">
+                                <div v-if="isLoading" style="position: absolute; z-index: 2; top: 0; bottom: 0; left: 0; right: 0; display: flex;justify-content: center;align-items: center; background-color: rgb(255 255 255 / 80%)">
                                     <v-card class="text-center" width="200" max-width="200">
                                         <v-card-text>
                                             Loading Map
@@ -96,17 +101,17 @@
                                         </v-card-text>
                                     </v-card>
                                 </div>
-                                <div v-if="locationDisable" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; display: flex;justify-content: center;align-items: center;">
+                                <!-- <div v-if="locationDisable" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; display: flex;justify-content: center;align-items: center;">
                                     <v-card class="text-center" width="200" max-width="200">
                                         <v-card-text>
                                             Please Enable Location
                                         </v-card-text>
                                     </v-card>
-                                </div>
+                                </div> -->
                                 <div id="map" class="rounded-lg"></div>
                             </v-card-text>
                             <v-card-text>
-                                <v-textarea label="Alamat Lengkap" rows="4" v-model="user.address" outlined :error-messages="error.errors ? error.errors.address : ''"></v-textarea>
+                                <v-textarea label="Alamat Lengkap" rows="4" v-model="user.address" outlined :error-messages="error.errors ? error.errors.address : ''" required></v-textarea>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
@@ -191,6 +196,7 @@ export default {
                 service_fee: 0,
                 total: 0,
             },
+            search: '',
             error: {}
         }
     },
@@ -280,6 +286,25 @@ export default {
             );
         },
 
+        findLocation() {
+            this.isLoading = true;
+            // JANGAN LUPA PASANG TOKEN NYA
+            axios.get(`https://api.distancematrix.ai/maps/api/geocode/json?key=<<token_here>>&address=${this.search}`).then((response) => {
+                if(response.data.result != null) {
+                    this.user.latlng = [response.data.result[0].geometry.location.lat, response.data.result[0].geometry.location.lng]
+                    this.loadMap()
+                    this.error = {};
+                } else {
+                    this.error = {errors:{search:'Lokasi tidak ditemukan'}}
+                }
+                this.isLoading = false;
+            }).catch((error) => {
+                this.error = {errors:{search:'Lokasi tidak ditemukan'}}
+                this.isLoading = false;
+                console.log(error.response)
+            })
+        },
+
         loadMap() {
             this.isLoading = true
             const container = document.getElementById('map')
@@ -306,25 +331,25 @@ export default {
                     marker          = L.marker(this.user.latlng, {icon: pinIcon, draggable: true}).addTo(map),
                     geocodeService  = L.esri.Geocoding.geocodeService();
                 // cari lokasi
-                var searchControl = L.esri.Geocoding.geosearch({
-                    position: 'topright',
-                    placeholder: 'Ketik Alamat Sekarang',
-                    useMapBounds: false,
-                    providers: [L.esri.Geocoding.arcgisOnlineProvider()]
-                }).addTo(map);
+                // var searchControl = L.esri.Geocoding.geosearch({
+                //     position: 'topright',
+                //     placeholder: 'Ketik Alamat Sekarang',
+                //     useMapBounds: false,
+                //     providers: [L.esri.Geocoding.arcgisOnlineProvider()]
+                // }).addTo(map);
 
-                var results = L.layerGroup().addTo(map);
+                // var results = L.layerGroup().addTo(map);
     
-                searchControl.on('results', (data) => {
-                    results.clearLayers();
-                    for (var i = data.results.length - 1; i >= 0; i--) {
-                        marker.setLatLng(data.results[i].latlng).bindPopup(data.results[i].text).openPopup();
-                        const { lat, lng } = data.results[i].latlng;
-                        this.user.lat = lat
-                        this.user.lng = lng
-                        this.user.latlng = [lat, lng]
-                    }
-                });
+                // searchControl.on('results', (data) => {
+                //     results.clearLayers();
+                //     for (var i = data.results.length - 1; i >= 0; i--) {
+                //         marker.setLatLng(data.results[i].latlng).bindPopup(data.results[i].text).openPopup();
+                //         const { lat, lng } = data.results[i].latlng;
+                //         this.user.lat = lat
+                //         this.user.lng = lng
+                //         this.user.latlng = [lat, lng]
+                //     }
+                // });
 
                 // marker
                 marker.on('dragend', (e) => {

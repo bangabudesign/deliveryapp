@@ -50,13 +50,13 @@
                         </v-card-text>
                     </v-card>
                 </div>
-                <div v-if="locationDisable" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; display: flex;justify-content: center;align-items: center;">
+                <!-- <div v-if="locationDisable" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; display: flex;justify-content: center;align-items: center;">
                     <v-card class="text-center" width="200" max-width="200">
                         <v-card-text>
                             Please Enable Location
                         </v-card-text>
                     </v-card>
-                </div>
+                </div> -->
                 <div id="map"></div>
             </v-card>
         </v-container>
@@ -121,6 +121,7 @@ export default {
                 const response = await axios.get(`/api/user`);
                 this.user = response.data.data
                 this.status = response.data.data.is_working
+                this.loadMap()
                 this.isLoading = false
             } catch (error) {
                 this.isLoading = false

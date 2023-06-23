@@ -14,7 +14,7 @@ class UpdateLocation extends Controller
         $validator = Validator::make($request->all(), [
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
-            'address' => 'nullable'
+            'address' => 'required'
         ], [
             'required' => ':attribute tidak boleh kosong.',
             'numeric' => ':attribute harus berupa angka.',
